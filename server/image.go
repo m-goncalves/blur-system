@@ -18,7 +18,6 @@ func (img image) save() error {
 	if err != nil {
 		return err
 	}
-
 	defer tempFile.Close()
 
 	fileBytes, err := ioutil.ReadAll(img.file)
@@ -30,14 +29,18 @@ func (img image) save() error {
 	if err != nil {
 		return err
 	}
-	// write the byte array to out temporaty file
+
+	// write this byte array to our temporary file
 	_, err = tempFile.Write(fileBytes)
 
 	return err
 }
 
 func (img image) saveMetadata(sourceFilename string) error {
-	metadataFile, err := os.OpenFile("metadata.csv", os.O_CREATE|os.O_CREATE|os.O_WRONLY, 0666)
+	metadataFile, err := os.OpenFile("metadata.csv", os.O_CREATE|os.O_APPEND|os.O_WRONLY, 0666)
+	if err != nil {
+		return err
+	}
 
 	metadataWriter := csv.NewWriter(metadataFile)
 	defer metadataWriter.Flush()
@@ -46,7 +49,6 @@ func (img image) saveMetadata(sourceFilename string) error {
 	if err != nil {
 		return err
 	}
-
 	if size := fileStat.Size(); size == 0 {
 		err = metadataWriter.Write([]string{"name", "size", "path"})
 		if err != nil {
