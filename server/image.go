@@ -26,7 +26,7 @@ func (img image) save() error {
 		return err
 	}
 
-	err = img.saveMetadata(tempFile.Name)
+	err = img.saveMetadata(tempFile.Name())
 	if err != nil {
 		return err
 	}
@@ -37,10 +37,7 @@ func (img image) save() error {
 }
 
 func (img image) saveMetadata(sourceFilename string) error {
-	metadataFile, err := os.Openfile("metadata.csv", os.O_CREATE|os.O_APPEND|os.O_WRONLY, 0666)
-	if err != nil {
-		return err
-	}
+	metadataFile, err := os.OpenFile("metadata.csv", os.O_CREATE|os.O_CREATE|os.O_WRONLY, 0666)
 
 	metadataWriter := csv.NewWriter(metadataFile)
 	defer metadataWriter.Flush()
