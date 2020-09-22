@@ -2,12 +2,12 @@ package main
 
 import (
 	"net/http"
-	"github.com/m-goncalves/wewbservice/server"
+	"github.com/m-goncalves/webservice/server"
 )
 
 func main {
 	http.HandlerFunc("/", server.GetFile)
 	http.HandlerFunc("/upload", server.Upload)
-	http.ListenAndServe(":8080", nilM_mg357623)
+	http.ListenAndServe(":8080", nil)
 }
 
