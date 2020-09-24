@@ -11,22 +11,23 @@ func logErr(err error, msg string) {
 	log.Fatalf("%s: %s", err, msg)
 }
 
-//retrieves a posts request of an image and saves it in a folder called "imagens/."
+//retrieving a posts request of an image and saves it in a folder called "imagens/."
 func Upload(w http.ResponseWriter, r *http.Request) {
+	//parses the whole request body. Specifies the limits of the upload (10MB).
 	r.ParseMultipartForm(10 << 20)
 
-	// the image and the metadata are assigned to the variables "file and handler."
+	// assigning the image and the metadata to the variables "file and handler. FormFile returns the first file provide by the specified key ('image-file')"
 	file, handler, err := r.FormFile("image-file")
 	if err != nil {
 		logErr(err, "Error retrieving the file")
 		return
 	}
-	defer file.Close()
+	defer file.Close() // postpone the closing of the file until the end of the function.
 
-	// Saving the image in the folder  "imagens" and  the metadata in the file "metadata.csv."
+	// assigning the bellow values to the struct and calling the function save() on it.
 	err = image{
 		name: handler.Filename,
-		size: fmt.Sprintf("%d", handler.Size),
+		size: fmt.Sprintf("%d", handler.Size), // "Sprint" formats but doen't print the value.
 		file: file,
 	}.save()
 
@@ -38,6 +39,7 @@ func Upload(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "File successfully uploaded\n")
 }
 
+//handles the upload
 func GetFile(w http.ResponseWriter, r *http.Request) {
 	index, err := ioutil.ReadFile("index.html")
 	if err != nil {
