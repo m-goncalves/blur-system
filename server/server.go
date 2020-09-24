@@ -11,11 +11,11 @@ func logErr(err error, msg string) {
 	log.Fatalf("%s: %s", err, msg)
 }
 
-// This funcion retrieves a posts request of an image and saves it in a folder called "imagens/"
+//retrieves a posts request of an image and saves it in a folder called "imagens/."
 func Upload(w http.ResponseWriter, r *http.Request) {
 	r.ParseMultipartForm(10 << 20)
 
-	// the image and the metadata are assigned to the variables "file and handler"
+	// the image and the metadata are assigned to the variables "file and handler."
 	file, handler, err := r.FormFile("image-file")
 	if err != nil {
 		logErr(err, "Error retrieving the file")
@@ -23,7 +23,7 @@ func Upload(w http.ResponseWriter, r *http.Request) {
 	}
 	defer file.Close()
 
-	// Salva a imagem na pasta imagens e suas informetadata.csv
+	// Saving the image in the folder  "imagens" and  the metadata in the file "metadata.csv."
 	err = image{
 		name: handler.Filename,
 		size: fmt.Sprintf("%d", handler.Size),
@@ -34,7 +34,7 @@ func Upload(w http.ResponseWriter, r *http.Request) {
 		logErr(err, "Error saving file")
 	}
 
-	// return that we have successfully uploaded our file!
+	// Shows to the user that the upload was successful.
 	fmt.Fprintf(w, "File successfully uploaded\n")
 }
 
