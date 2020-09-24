@@ -16,7 +16,7 @@ func Upload(w http.ResponseWriter, r *http.Request) {
 	//parses the whole request body. Specifies the limits of the upload (10MB).
 	r.ParseMultipartForm(10 << 20)
 
-	// assigning the image and the metadata to the variables "file and handler. FormFile returns the first file provide by the specified key ('image-file')"
+	// assigning the image and the metadata to the variables "file" and "handler". "FormFile" returns the first file provided by the specified key ('image-file')"
 	file, handler, err := r.FormFile("image-file")
 	if err != nil {
 		logErr(err, "Error retrieving the file")
@@ -27,7 +27,7 @@ func Upload(w http.ResponseWriter, r *http.Request) {
 	// assigning the bellow values to the struct and calling the function save() on it.
 	err = image{
 		name: handler.Filename,
-		size: fmt.Sprintf("%d", handler.Size), // "Sprint" formats but doen't print the value.
+		size: fmt.Sprintf("%d", handler.Size), // "Sprint" formats but doesn't print the value.
 		file: file,
 	}.save()
 
@@ -35,11 +35,11 @@ func Upload(w http.ResponseWriter, r *http.Request) {
 		logErr(err, "Error saving file")
 	}
 
-	// Shows to the user that the upload was successful.
+	// showing to the user that the upload was successful.
 	fmt.Fprintf(w, "File successfully uploaded\n")
 }
 
-//handles the upload
+//mapping the file which must be handled by the funtion "http.HandleFunc"
 func GetFile(w http.ResponseWriter, r *http.Request) {
 	index, err := ioutil.ReadFile("index.html")
 	if err != nil {

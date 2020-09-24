@@ -14,12 +14,14 @@ type image struct {
 }
 
 func (img image) save() error {
+	//writing a temporary file to our server: path + pattern (assigning a random number the file name)
 	tempFile, err := ioutil.TempFile("imagens", "upload-*.png")
 	if err != nil {
 		return err
 	}
 	defer tempFile.Close()
 
+	// reading the content of the variable "img.file"
 	fileBytes, err := ioutil.ReadAll(img.file)
 	if err != nil {
 		return err
@@ -30,7 +32,7 @@ func (img image) save() error {
 		return err
 	}
 
-	// write this byte array to our temporary file
+	// writting "fileBytes" to the temporary file
 	_, err = tempFile.Write(fileBytes)
 
 	return err
