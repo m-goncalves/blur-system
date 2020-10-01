@@ -5,17 +5,26 @@ import (
 	"io/ioutil"
 	"mime/multipart"
 	"os"
+	"os/exec"
 )
 
 type image struct {
 	name string
 	size string
+	path string
 	file multipart.File
 }
 
-func (img image) save() error {
+func createFolder(foldername string) {
+	if _, err := os.Stat(foldername); os.IsNotExist(err) {
+		os.Mkdir(foldername, 0666)
+	}
+}
+
+func (img *image) save() error {
+	createFolder("images")
 	//writing a temporary file to our server: path + pattern (assigning a random number the file name)
-	tempFile, err := ioutil.TempFile("imagens", "upload-*.png")
+	tempFile, err := ioutil.TempFile("images", "upload-*.png")
 	if err != nil {
 		return err
 	}
@@ -28,7 +37,8 @@ func (img image) save() error {
 	}
 
 	// saves the the metadata
-	err = img.saveMetadata(tempFile.Name())
+	img.path = tempFile.Name()
+	err = img.saveMetadata()
 	if err != nil {
 		return err
 	}
@@ -39,14 +49,14 @@ func (img image) save() error {
 	return err
 }
 
-func (img image) saveMetadata(sourceFilename string) error {
+func (img image) saveMetadata() error {
 	//creates a file (if non existent) and adds or appends data to it.
 	metadataFile, err := os.OpenFile("metadata.csv", os.O_CREATE|os.O_APPEND|os.O_WRONLY, 0666)
 	if err != nil {
 		return err
 	}
 
-	// createsa buffer to the "metadataFile"
+	// creates a buffer to the "metadataFile"
 	metadataWriter := csv.NewWriter(metadataFile)
 
 	// transfer the data from the buffer to the disk.
@@ -66,5 +76,10 @@ func (img image) saveMetadata(sourceFilename string) error {
 		}
 	}
 	// writes the metadata to "metadata.csv"
-	return metadataWriter.Write([]string{img.name, img.size, sourceFilename})
+	return metadataWriter.Write([]string{img.name, img.size, img.path})
+}
+
+func (img image) applyBlur() error {
+	blurCommand := exec.Command("ruby", "controller/blurImage.rb", img.path)
+	return blurCommand.Run()
 }
