@@ -29,5 +29,5 @@ for face in faces:
     width = face_image.shape[0]
     height = face_image.shape[1]
     image[startY:startY+width, startX:startX+height] = face_image   
-# writing the blurred image to folder "transformation"
+# writing the blurred image to folder
 imwrite(args.destination_path, image)
