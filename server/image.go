@@ -17,7 +17,7 @@ type image struct {
 
 func createFolder(foldername string) {
 	if _, err := os.Stat(foldername); os.IsNotExist(err) {
-		os.Mkdir(foldername, 0666)
+		os.Mkdir(foldername, 0755)
 	}
 }
 
@@ -51,7 +51,7 @@ func (img *image) save() error {
 
 func (img image) saveMetadata() error {
 	//creates a file (if non existent) and adds or appends data to it.
-	metadataFile, err := os.OpenFile("metadata.csv", os.O_CREATE|os.O_APPEND|os.O_WRONLY, 0666)
+	metadataFile, err := os.OpenFile("metadata.csv", os.O_CREATE|os.O_APPEND|os.O_WRONLY, 0644)
 	if err != nil {
 		return err
 	}
