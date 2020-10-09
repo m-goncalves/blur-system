@@ -8,8 +8,6 @@ WORKDIR /
 
 RUN mkdir -p source-images blurred-images
 
-WORKDIR /go/src
-
 WORKDIR /go/src/github.com/m-goncalves/webservice
 
 COPY server/  server/
