@@ -1,6 +1,9 @@
 # cvlib depends on workflow, which depends on nvidia/cuda. 
 FROM nvidia/cuda:10.1-base-ubuntu18.04
 
+LABEL version="0.0.1"
+LABEL maintainer="mgoncalves@anynines.com"
+
 #installing python and git
 RUN apt-get update \
     && apt-get install -y python3.6 python3-pip \
