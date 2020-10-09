@@ -15,16 +15,9 @@ type image struct {
 	file multipart.File
 }
 
-func createFolder(foldername string) {
-	if _, err := os.Stat(foldername); os.IsNotExist(err) {
-		os.Mkdir(foldername, 0755)
-	}
-}
-
 func (img *image) save() error {
-	createFolder("images")
 	//writing a temporary file to our server: path + pattern (assigning a random number the file name)
-	tempFile, err := ioutil.TempFile("images", "upload-*.png")
+	tempFile, err := ioutil.TempFile("/source-images", "upload-*.png")
 	if err != nil {
 		return err
 	}
