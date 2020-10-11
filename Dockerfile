@@ -1,12 +1,8 @@
-FROM golang
+FROM golang:1.15.2
 
 LABEL version="0.0.1"
 
-LABEL maintainer="mgoncalves@anynines.com"
-
-WORKDIR /
-
-RUN mkdir -p source-images blurred-images
+LABEL maintainer="mjg"
 
 WORKDIR /go/src/github.com/m-goncalves/webservice
 
@@ -21,5 +17,7 @@ RUN GOBIN=/go/bin go install cmd/webservice/webservice.go
 ENTRYPOINT /go/bin/webservice
 
 EXPOSE 8080
+
+VOLUME [ "/source-images", "/blurred-images" ]
 
 

@@ -1,31 +1,23 @@
-# cvlib depends on workflow, which depends on nvidia/cuda. 
+# cvlib depends on tensorflow, which depends on nvidia/cuda. 
 FROM nvidia/cuda:10.1-base-ubuntu18.04
 
 LABEL version="0.0.1"
-LABEL maintainer="mgoncalves@anynines.com"
 
-#installing python and git
-RUN apt-get update \
-    && apt-get install -y python3.6 python3-pip \
-    && apt-get install -y git
+LABEL maintainer="mjg"
 
-#installing the latest cvlib from github
-WORKDIR /
-RUN git clone https://github.com/arunponnusamy/cvlib
+RUN apt update \
+    && apt install -y python3.6 python3-pip \
+    && apt install -y ruby
 
-#installing cvlib and its dependencies
 WORKDIR /cvlib
-RUN pip3 install --upgrade pip
-RUN pip3 install opencv-python tensorflow
-RUN pip3 install cvlib
-RUN apt install -y libsm6 libxext6 libxrender-dev libgl1-mesa-glx
-RUN apt install -y ruby-full 
 
-#cleanig up`
-RUN apt-get remove -y git python3-pip
+RUN pip3 install --upgrade pip; \
+    pip3 install opencv-python tensorflow cvlib; \
+    apt install -y libsm6 libxext6 libxrender-dev libgl1-mesa-glx; \
+    apt remove -y python3-pip
 
 WORKDIR /app
 
 COPY . .
 
-RUN mkdir -p source-images blurred images
+VOLUME [ "/app/blurred-images", "app/source-images" ]
