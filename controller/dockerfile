@@ -21,3 +21,5 @@ WORKDIR /app
 COPY . .
 
 VOLUME [ "/app/blurred-images", "app/source-images" ]
+
+CMD [ "tail", "-f","/dev/null" ]
