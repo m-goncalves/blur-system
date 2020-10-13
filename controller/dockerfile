@@ -1,16 +1,21 @@
-# cvlib depends on tensorflow, which depends on nvidia/cuda. 
+# workaround: cvlib depends on tensorflow, which depends on nvidia/cuda: packages are huge. 
+# (This base image will be changed in the next version of the file).
 FROM nvidia/cuda:10.1-base-ubuntu18.04
 
 LABEL version="0.0.1"
 
 LABEL maintainer="mjg"
 
+# "apt update" sometimes  not considered a good practice. Check exactly in which case. 
+# Try to undestand why and find out an alternative if necessary. 
 RUN apt update \
-    && apt install -y python3.6 python3-pip \
+    # "apt install" here not considered a good practice. Try to undestand why and find out an alternative. 
+    && apt install -y python3.8 python3-pip \ 
+    # ruby version installed: 2.5.1. Check if it's enough. If not try to install anther one with rbenv or rvm.
     && apt install -y ruby
 
 WORKDIR /cvlib
-
+    # bellow lines will be changed as well. 
 RUN pip3 install --upgrade pip; \
     pip3 install opencv-python tensorflow cvlib; \
     apt install -y libsm6 libxext6 libxrender-dev libgl1-mesa-glx; \
@@ -21,5 +26,5 @@ WORKDIR /app
 COPY . .
 
 VOLUME [ "/app/blurred-images", "app/source-images" ]
-
+# only to keep container running to check versions usw.
 CMD [ "tail", "-f","/dev/null" ]

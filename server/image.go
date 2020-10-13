@@ -17,7 +17,7 @@ type image struct {
 
 func (img *image) save() error {
 	//writing a temporary file to our server: path + pattern (assigning a random number the file name)
-	tempFile, err := ioutil.TempFile("/source-images", "upload-*.png")
+	tempFile, err := ioutil.TempFile("source-images", "upload-*.png")
 	if err != nil {
 		return err
 	}
