@@ -6,6 +6,7 @@ import (
 	"mime/multipart"
 	"os"
 	"os/exec"
+	"path/filepath"
 )
 
 type image struct {
@@ -30,7 +31,11 @@ func (img *image) save() error {
 	}
 
 	// saves the the metadata
-	img.path = tempFile.Name()
+	img.path, err = filepath.Abs(tempFile.Name())
+	if err != nil {
+		return err
+	}
+
 	err = img.saveMetadata()
 	if err != nil {
 		return err
@@ -73,6 +78,7 @@ func (img image) saveMetadata() error {
 }
 
 func (img image) applyBlur() error {
-	blurCommand := exec.Command("ruby", "controller/blurImage.rb", img.path)
+	blurCommand := exec.Command("ruby", "blurImage.rb", img.path)
+	blurCommand.Dir = "controller/"
 	return blurCommand.Run()
 }
