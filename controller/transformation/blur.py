@@ -1,5 +1,5 @@
-from cvlib import detect_face
-from cv2 import blur, imread, imwrite
+from face_recognition import load_image_file, face_locations
+from PIL import Image, ImageFilter
 from argparse import ArgumentParser, ArgumentTypeError
 from re import compile
 
@@ -23,36 +23,33 @@ except ArgumentTypeError:
     exit(1)
 try:
     # reading input image
-    image = imread(args.source_path)
+    image = load_image_file(args.source_path)
 except FileNotFoundError:
     print(f"file {args.source_path} does not exist")
     exit(1)
 
 try:
     # applying face detection. returns the coordinates
-    faces, _  = detect_face(image)
+    faces  = face_locations(image)
 except TypeError:
-    print(f"file {args.source_path} does not exist or is invalid")
+    print(f"file {args.source_path} is not a valid")
     exit(1)
 
 # looping through detected faces
-for face in faces:
+for top, right, bottom, left in faces:
 
     #assigning the coordinates to the variables
-    startX, startY, endX, endY = face
-    #building point to be blurred
-    face_image = image[startY:endY, startX:endX]
+    face_image = image[top:bottom, left:right]
+    face_image = Image.fromarray(face_image)
     #blurring faces
-    face_image = blur(face_image, (40, 40))
+    face_image = face_image.filter(ImageFilter.BoxBlur(23))
     #rebuilding the image. "shape[0] and height returns nr. of rows and nr. of columns"
-    # dont understand the logics
-    width = face_image.shape[0]
-    height = face_image.shape[1]
-    image[startY:startY+width, startX:startX+height] = face_image  
-
+    image[top:bottom, left:right] = face_image  
 try:
-    # writing the blurred image to folder
-    imwrite(args.destination_path, image)
+   
+    image = Image.fromarray(image)
+     # writing the blurred image to folder
+    image.save(args.destination_path)
 except FileNotFoundError:
     print(f"file {args.destination_path} does not exist")
     exit(1)
