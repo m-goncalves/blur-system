@@ -29,14 +29,14 @@ system("rm -f " + sourceFile)
 connection = Bunny.new(host: "rabbitmq")
 connection.start
 
-channel = connection.create_channel
+channel = connection.create_channel  
 queue = channel.queue('blur-service')
 
 sourceFile = ""
 
 begin
     queue.subscribe(block: true) do |  _delivery_info, _properties, filepath |
-        output = system "python3", "transformation/blur.py", filepath, destinationPath(filepath)
+        output = system "python3", "transformation/blur.py", filepath, destinationPath (filepath)
         system("rm -f " + filepath)
     end
 rescue
