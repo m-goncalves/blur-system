@@ -30,12 +30,12 @@ func (img *image) save() error {
 		return err
 	}
 
-	// saves the the metadata
 	img.path, err = filepath.Abs(tempFile.Name())
 	if err != nil {
 		return err
 	}
 
+	// saves the the metadata
 	err = img.saveMetadata()
 	if err != nil {
 		return err
@@ -80,5 +80,6 @@ func (img image) saveMetadata() error {
 func (img image) applyBlur() error {
 	blurCommand := exec.Command("ruby", "blurImage.rb", img.path)
 	blurCommand.Dir = "controller/"
+
 	return blurCommand.Run()
 }
