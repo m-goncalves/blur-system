@@ -14,7 +14,10 @@ func logErr(err error, msg string) {
 //retrieving a post request of an image and saves it in a folder called "blurred_images."
 func Blur(w http.ResponseWriter, r *http.Request) {
 	//parsing the whole request body. Specifying the limits of the upload (10MB).
-	r.ParseMultipartForm(10 << 20)
+	err := r.ParseMultipartForm(10 << 20)
+	if err != nil {
+		logErr(err, "Error parsing image file")
+	}
 
 	// assigning the image and the metadata to the variables "file" and "handler". "FormFile" returns the first file provided by the specified key ('image-file')."
 	file, handler, err := r.FormFile("image-file")
@@ -38,9 +41,9 @@ func Blur(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = img.applyBlur()
+	err = sendImage(img.path)
 	if err != nil {
-		logErr(err, "Error blurring image")
+		logErr(err, "Error sending message")
 	}
 
 	// showing to the user that the upload was successful.
