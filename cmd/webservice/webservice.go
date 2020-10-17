@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 
@@ -14,5 +15,8 @@ func main() {
 	http.HandleFunc("/blur", server.Blur)
 	log.Println("serving on port:", port)
 	//setting up port to listen on.
-	http.ListenAndServe(":8080", nil)
+	err := http.ListenAndServe(":8080", nil)
+	if err != nil {
+		panic(fmt.Sprintf("server stoped running %s", err))
+	}
 }
