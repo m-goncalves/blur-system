@@ -1,0 +1,6 @@
+controller
+go.mod
+metadata.csv
+README.MD
+dockerfile
+Makefile
