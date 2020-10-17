@@ -27,7 +27,7 @@ sourceFile = ""
 begin
     queue.subscribe(block: true) do |  _delivery_info, _properties, filepath |
         # calling the python programm and passing the arguments it needs: the image to be blurred and where it has to be placed
-        output = system "python3", "transformation/blur.py", filepath, destinationPath (filepath)
+        output = system "python3", "transformation/blur.py", filepath, destinationPath(filepath)
         system("rm -f " + filepath)
     end
 rescue
