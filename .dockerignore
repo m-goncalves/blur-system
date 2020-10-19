@@ -4,3 +4,4 @@ metadata.csv
 README.MD
 dockerfile
 Makefile
+.vccode
