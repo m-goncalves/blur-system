@@ -18,17 +18,21 @@ func formatter(err error, msg string) error {
 
 func init() {
 	var err error
-	conn, err = amqp.Dial("amqp://guest:guest@rabbitmq:5672") // Access to linked rabbitmq host
+	// Accessing the rabbitmq host: user and password. Try to find out a more secure way to handle credentials.
+	conn, err = amqp.Dial("amqp://guest:guest@rabbitmq:5672")
 	if err != nil {
 		logErr(err, "Failed to connect to RabbitMQ")
 	}
 
+	// Opening a server channel to process the messages (It makes possible to interact to the rabbitmq instance)
 	channel, err = conn.Channel()
 	if err != nil {
-		logErr(err, "Failed to open a channel")
+		logErr(err, "Failed openning a channel")
 	}
 
+	//Declaring the queue, which will
 	queue, err = channel.QueueDeclare(
+		// Assigning a name to the declared queue
 		"blur-service",
 		false,
 		false,
@@ -43,12 +47,14 @@ func init() {
 }
 
 func sendImage(path string) error {
+	// sends the messages to the server
 	err := channel.Publish(
 		"",
 		queue.Name,
 		false,
 		false,
 		amqp.Publishing{
+			//type and content of the message to be sent
 			ContentType: "text/plain",
 			Body:        []byte(path),
 		})
