@@ -1,7 +1,7 @@
 controller
-go.mod
-metadata.csv
-README.MD
-dockerfile
+Dockerfile
+.gitignore
 Makefile
-.vccode
+metadata.csv
+README.md
+.vscode
