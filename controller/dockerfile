@@ -1,19 +1,24 @@
 FROM python:3.8-slim
+#FROM python:3.8-alpine3.12
 
 LABEL version="0.0.1"
 
-RUN apt update && apt install -y \
+RUN apt-get update && apt-get install -y \
     cmake \
     g++ \
     ruby-full \
-    && pip install --upgrade pip \
-    && pip install face-recognition
-    
-RUN gem install bunny --version ">= 2.13.0"
+    && gem install bunny --version ">= 2.13.0" 
+
+COPY requirements.txt .
+
+RUN pip install --upgrade pip \
+    && pip install -r requirements.txt 
 
 WORKDIR /app
 
-COPY . .
+COPY transformation transformation
+
+COPY blurImage.rb .
 
 ENTRYPOINT ruby blurImage.rb
 
