@@ -1,0 +1,43 @@
+version:  '3.3'
+services: 
+    blur-rabbitmq: 
+        image: rabbitmq:3-alpine
+        container_name: blur-rabbitmq
+        restart: always
+        hostname: rabbitmq
+        ports: 
+            - 5672:5672
+            - 15672:15672
+        environment:
+            # RABBITMQ_ERLANG_COOKIE: ${RABBITMQ_ERLANG_COOKIE}
+            - RABBITMQ_DEFAULT_USER=guest
+            - RABBITMQ_DEFAULT_PASS=guest 
+    
+    blur-service: 
+        depends_on:
+            - blur-rabbitmq
+        build: .
+        container_name: blur-service
+        restart: always
+        hostname: rabbitmq
+        volumes:
+            - type: bind
+              source: /Users/marcelo/Desktop/source-images
+              target: /source-images
+        ports: 
+            - 8080:8080
+
+    blur-worker: 
+        depends_on:
+            - blur-rabbitmq
+        build: controller/
+        container_name: blur-worker
+        restart: always
+        hostname: rabbitmq
+        volumes:
+            - type: bind
+              source: /Users/marcelo/Desktop/source-images
+              target: /source-images
+            - type: bind
+              source: /Users/marcelo/Desktop/blurred-images
+              target: /blurred-images
