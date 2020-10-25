@@ -3,7 +3,7 @@ from PIL import Image, ImageFilter
 import os
 
 class FaceBlur:
-    def _init_(self, sourceImage, destinationPath):
+    def __init__(self, sourceImage, destinationPath):
         self.destinationPath = destinationPath
         self.sourceImage = sourceImage
         self.loadSourceImage()
