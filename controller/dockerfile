@@ -1,25 +1,27 @@
 FROM python:3.8-slim
-#FROM python:3.8-alpine3.12
 
 LABEL version="0.0.1"
 
 RUN apt-get update && apt-get install -y \
     cmake \
-    g++ \
-    ruby-full \
-    && gem install bunny --version ">= 2.13.0" 
-
+    g++ 
+    
 COPY requirements.txt .
 
 RUN pip install --upgrade pip \
     && pip install -r requirements.txt 
 
+# && useradd worker \
+    # && mkdir -p /source-images /blurred-images /home/worker/webservice \
+    # && chown -R worker /home/worker /source-images /blurred-images
+
+# RUN chmod u+rwx /blurred-images
+# USER worker
+
 WORKDIR /app
 
-COPY transformation transformation
+COPY . .
 
-COPY blurImage.rb .
-
-ENTRYPOINT ruby blurImage.rb
+ENTRYPOINT python worker.py
 
 VOLUME ["/source-images", "/blurred-images"]
