@@ -10,9 +10,8 @@ services:
             - 5672:5672
             - 15672:15672
         environment:
-            # RABBITMQ_ERLANG_COOKIE: ${RABBITMQ_ERLANG_COOKIE}
-            RABBITMQ_DEFAULT_USER: "guest"
-            RABBITMQ_DEFAULT_PASS: "guest"
+            RABBITMQ_DEFAULT_USER: ${RABBITMQ_USER}
+            RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD} 
             RABBITMQ_DEFAULT_VHOST: "/"
     
     blur-service: 
@@ -22,6 +21,7 @@ services:
         container_name: blur-service
         restart: always
         volumes:
+            #use normal volumes later
             - type: bind
               source: /Users/marcelo/Desktop/source-images
               target: /source-images
