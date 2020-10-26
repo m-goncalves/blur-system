@@ -18,8 +18,9 @@ func formatter(err error, msg string) error {
 
 func init() {
 	var err error
-	// Accessing the rabbitmq host: user and password. Try to find out a more secure way to handle credentials.
-	conn, err = amqp.Dial("amqp://guest:guest@rabbitmq:5672")
+	// Accessing the rabbitmq host: user and password. SERVICE NAME IN THE COMPOSE-FILE HAS TO MATCH THE
+	// NAME ASSIGNED TO THE HOST HERE!!!!!!!
+	conn, err = amqp.Dial("amqp://guest:guest@blur-rabbitmq:5672")
 	if err != nil {
 		logErr(err, "Failed to connect to RabbitMQ")
 	}

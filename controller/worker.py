@@ -15,7 +15,7 @@ def destinationPath(sourcePath) -> str:
     return f"{destinationFolder}/{sourcePath}"
 
 def main():
-    connection = BlockingConnection(ConnectionParameters("rabbitmq"))
+    connection = BlockingConnection(ConnectionParameters("blur-rabbitmq"))
     channel = connection.channel()
     channel.queue_declare(queue="blur-service")
 
