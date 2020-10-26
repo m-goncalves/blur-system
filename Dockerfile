@@ -1,7 +1,7 @@
 FROM golang:1.15.2-alpine3.12 AS builder
 
 LABEL version="0.0.1"
-#try later to use a more anonym folder
+
 WORKDIR /go/src/github.com/m-goncalves/webservice
 
 ADD go.mod .
