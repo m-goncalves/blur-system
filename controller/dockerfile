@@ -1,27 +1,48 @@
-FROM python:3.8-slim
+FROM python:3.8-alpine
 
 LABEL version="0.0.1"
 
-RUN apt-get update && apt-get install -y \
+RUN apk add --update-cache \
+    build-base \
     cmake \
-    g++ \
-    && pip install --upgrade pip
+    jpeg-dev \
+    py-pip \
+    zlib-dev \
+    && pip install --upgrade pip \
+    && rm -rf /var/cache/apk/*
 
 COPY requirements.txt .
 
-RUN pip install -r requirements.txt 
+RUN pip install -r requirements.txt
 
-WORKDIR /app
+RUN adduser -D worker
 
-COPY . .
+USER worker
 
-ENTRYPOINT python worker.py
+COPY . /home/worker 
+
+ENTRYPOINT python /home/worker/worker.py
 
 VOLUME ["/source-images", "/blurred-images"]
 
-# try again later
-# && useradd worker \
-    # && mkdir -p /source-images /blurred-images /home/worker/webservice \
-    # && chown -R worker /home/worker /source-images /blurred-images
-# RUN chmod u+rwx /blurred-images
-# USER worker
+# FROM alpine:3.12
+
+# LABEL version="0.0.1"
+
+# RUN apt-get update && apt-get install -y \
+#     cmake \
+#     g++ \
+#     && pip install --upgrade pip
+
+# COPY requirements.txt .
+
+# RUN pip install -r requirements.txt 
+
+# WORKDIR /app
+
+# COPY . .
+
+# ENTRYPOINT python worker.py
+
+# VOLUME ["/source-images", "/blurred-images"]
+
