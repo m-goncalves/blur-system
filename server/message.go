@@ -2,6 +2,7 @@ package server
 
 import (
 	"fmt"
+	"os"
 
 	"github.com/streadway/amqp"
 )
@@ -18,9 +19,10 @@ func formatter(err error, msg string) error {
 
 func init() {
 	var err error
-	// Accessing the rabbitmq host: user and password. SERVICE NAME IN THE COMPOSE-FILE HAS TO MATCH THE
-	// NAME ASSIGNED TO THE HOST HERE!!!!!!!
-	conn, err = amqp.Dial("amqp://guest:guest@blur-rabbitmq:5672")
+
+	url := os.Getenv("AMQP_URL")
+
+	conn, err = amqp.Dial(url)
 	if err != nil {
 		logErr(err, "Failed to connect to RabbitMQ")
 	}

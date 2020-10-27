@@ -27,6 +27,8 @@ services:
               target: /source-images
         ports: 
             - 8080:8080
+        environment:
+            AMQP_URL: ${AMQP_URL}
 
     blur-worker: 
         depends_on:
