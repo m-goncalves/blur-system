@@ -24,25 +24,3 @@ COPY . /home/worker
 ENTRYPOINT python /home/worker/worker.py
 
 VOLUME ["/source-images", "/blurred-images"]
-
-# FROM alpine:3.12
-
-# LABEL version="0.0.1"
-
-# RUN apt-get update && apt-get install -y \
-#     cmake \
-#     g++ \
-#     && pip install --upgrade pip
-
-# COPY requirements.txt .
-
-# RUN pip install -r requirements.txt 
-
-# WORKDIR /app
-
-# COPY . .
-
-# ENTRYPOINT python worker.py
-
-# VOLUME ["/source-images", "/blurred-images"]
-
