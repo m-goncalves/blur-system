@@ -2,7 +2,7 @@ FROM golang:1.15.2-alpine3.12 AS builder
 
 LABEL version="0.0.1"
 
-WORKDIR /go/src/github.com/m-goncalves/webservice
+WORKDIR /go/src/project
 
 ADD go.mod .
 
@@ -16,18 +16,17 @@ RUN go build -o blur-service cmd/webservice/webservice.go
 
 FROM alpine:3.12
 
-RUN adduser -D service \
-    && mkdir -p /source-images /home/service/webservice \
-    && touch /home/service/webservice/metadata.csv \
-    && chown -R service /home/service /source-images
+RUN adduser -D webservice
 
-USER service
+USER webservice
 
-WORKDIR /home/service/webservice
+WORKDIR /home/webservice
 
-COPY --from=builder /go/src/github.com/m-goncalves/webservice/index.html .
+RUN touch metadata.csv
 
-COPY --from=builder /go/src/github.com/m-goncalves/webservice/blur-service . 
+COPY --from=builder /go/src/project/index.html .
+
+COPY --from=builder /go/src/project/blur-service . 
 
 EXPOSE 8080
 
