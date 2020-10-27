@@ -19,8 +19,10 @@ RUN adduser -D worker
 
 USER worker
 
-COPY . /home/worker 
+WORKDIR /home/worker
 
-ENTRYPOINT python /home/worker/worker.py
+COPY . .
+
+ENTRYPOINT python worker.py
 
 VOLUME ["/source-images", "/blurred-images"]
