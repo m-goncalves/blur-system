@@ -31,7 +31,7 @@ services:
     blur-worker: 
         depends_on:
             - blur-rabbitmq
-        build: controller/
+        build: worker/
         container_name: blur-worker
         restart: always
         volumes:
