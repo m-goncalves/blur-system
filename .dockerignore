@@ -1,6 +1,7 @@
 controller
 Dockerfile
 .DS_Store
+.env
 .gitignore
 Makefile
 metadata.csv
