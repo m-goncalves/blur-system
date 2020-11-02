@@ -20,6 +20,8 @@ def main():
     channel.queue_declare(queue="blur-service")
 
     def callback(ch, method, properties, body):
+        if isinstance(body, bytes):
+            body = body.decode("utf-8")
         blur = FaceBlur(body, destinationPath(body))
         blur.locateFaces()
         blur.blurFaces()
