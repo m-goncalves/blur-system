@@ -28,12 +28,23 @@ services:
             - 8080:8080
         environment:
             AMQP_URL: ${AMQP_URL}
+            MYSQL_USER: ${MYSQL_USER}
+            MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+            MYSQL_DATABASE: ${MYSQL_DATABASE}
+            MYSQL_METADATA_TABLE: ${MYSQL_METADATA_TABLE}
+            AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
+            AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
+            AWS_REGION: ${AWS_REGION}
+            AWS_BUCKET: ${AWS_BUCKET}
     blur-worker: 
         depends_on:
             - blur-rabbitmq
         build: worker/
         container_name: blur-worker
         restart: always
+        environment: 
+            AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
+            AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
         volumes:
             #use normal volumes later
             - type: bind
@@ -49,11 +60,13 @@ services:
         container_name: blur-mysql
         restart: always
         environment: 
-            MYSQL_USER: blur-user 
-            MYSQL_PASSWORD: blur-password 
-            MYSQL_ROOT_PASSWORD: root-password
-            MYSQL_DATABASE: blur-database
+            MYSQL_USER: ${MYSQL_USER}
+            MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+            MYSQL_ROOT_PASSWORD: password
+            MYSQL_DATABASE: ${MYSQL_DATABASE}
         volumes: 
             - type: bind
               source: /Users/marcelo/Desktop/blur-mysql
               target: /var/lib/mysql
+        ports:
+            - 3306:3306
