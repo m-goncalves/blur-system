@@ -41,7 +41,7 @@ func Blur(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = sendImage(img.path)
+	err = sendImage(img.key)
 	if err != nil {
 		logErr(err, "Error sending message")
 	}
