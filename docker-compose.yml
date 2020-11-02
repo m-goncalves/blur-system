@@ -13,7 +13,6 @@ services:
             RABBITMQ_DEFAULT_USER: ${RABBITMQ_USER}
             RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD} 
             RABBITMQ_DEFAULT_VHOST: "/"
-    
     blur-service: 
         depends_on:
             - blur-rabbitmq
@@ -29,7 +28,6 @@ services:
             - 8080:8080
         environment:
             AMQP_URL: ${AMQP_URL}
-
     blur-worker: 
         depends_on:
             - blur-rabbitmq
@@ -44,3 +42,18 @@ services:
             - type: bind
               source: /Users/marcelo/Desktop/blurred-images
               target: /blurred-images
+    blur-mysql:
+        depends_on: 
+            - blur-rabbitmq
+        build: sql/
+        container_name: blur-mysql
+        restart: always
+        environment: 
+            MYSQL_USER: blur-user 
+            MYSQL_PASSWORD: blur-password 
+            MYSQL_ROOT_PASSWORD: root-password
+            MYSQL_DATABASE: blur-database
+        volumes: 
+            - type: bind
+              source: /Users/marcelo/Desktop/blur-mysql
+              target: /var/lib/mysql
