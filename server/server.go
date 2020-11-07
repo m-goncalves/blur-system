@@ -31,7 +31,7 @@ func Blur(w http.ResponseWriter, r *http.Request) {
 	// assigning the bellow values to the struct "image" and the struct itself to the variable "img".
 	img := image{
 		name: handler.Filename,
-		size: fmt.Sprintf("%d", handler.Size), // "Sprint" formats but doesn't print the value.
+		size: int(handler.Size),
 		file: file,
 	}
 

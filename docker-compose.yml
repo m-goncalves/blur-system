@@ -1,19 +1,17 @@
 version:  '3.3'
-services: 
-     # SERVICE NAME HERE HAS TO MATCH THE NAME ASSIGNED TO THE HOST IN THE PRODUCER/.ENV-file!!!!!!!
-    blur-rabbitmq: 
+services:
+    blur-rabbitmq:
         image: rabbitmq:3-management
         container_name: blur-rabbitmq
         restart: always
         hostname: rabbitmq
-        ports: 
-            - 5672:5672
+        ports:
             - 15672:15672
         environment:
             RABBITMQ_DEFAULT_USER: ${RABBITMQ_USER}
-            RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD} 
+            RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD}
             RABBITMQ_DEFAULT_VHOST: "/"
-    blur-service: 
+    blur-service:
         depends_on:
             - blur-rabbitmq
         build: .
@@ -24,7 +22,7 @@ services:
             - type: bind
               source: /Users/marcelo/Desktop/source-images
               target: /source-images
-        ports: 
+        ports:
             - 8080:8080
         environment:
             AMQP_URL: ${AMQP_URL}
@@ -36,13 +34,13 @@ services:
             AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
             AWS_REGION: ${AWS_REGION}
             AWS_BUCKET: ${AWS_BUCKET}
-    blur-worker: 
+    blur-worker:
         depends_on:
             - blur-rabbitmq
         build: worker/
         container_name: blur-worker
         restart: always
-        environment: 
+        environment:
             AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
             AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
         volumes:
@@ -54,19 +52,18 @@ services:
               source: /Users/marcelo/Desktop/blurred-images
               target: /blurred-images
     blur-mysql:
-        depends_on: 
+        depends_on:
             - blur-rabbitmq
+        image: mysql:8.0
         build: sql/
         container_name: blur-mysql
         restart: always
-        environment: 
+        environment:
             MYSQL_USER: ${MYSQL_USER}
             MYSQL_PASSWORD: ${MYSQL_PASSWORD}
-            MYSQL_ROOT_PASSWORD: password
+            MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
             MYSQL_DATABASE: ${MYSQL_DATABASE}
-        volumes: 
+        volumes:
             - type: bind
               source: /Users/marcelo/Desktop/blur-mysql
               target: /var/lib/mysql
-        ports:
-            - 3306:3306
