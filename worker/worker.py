@@ -1,7 +1,8 @@
 from face_recognition import face_locations, load_image_file
 from PIL import Image, ImageFilter
 from blur import FaceBlur
-from pika import BlockingConnection, ConnectionParameters
+from pika import BlockingConnection, ConnectionParameters, URLParameters
+import os
 
 destinationFolder = "/blurred-images"
 
@@ -15,7 +16,14 @@ def destinationPath(sourcePath) -> str:
     return f"{destinationFolder}/{sourcePath}"
 
 def main():
-    connection = BlockingConnection(ConnectionParameters("blur-rabbitmq"))
+
+    rabbitmq_user = os.environ.get("RABBITMQ_USER")
+    rabbitmq_pwd = os.environ.get("RABBITMQ_PWD")
+    rabbitmq_host = os.environ.get("RABBITMQ_HOST")
+    rabbitmq_port = os.environ.get("RABBITMQ_PORT")
+    url = "amqp://%s:%s@%s:%s" %(rabbitmq_user, rabbitmq_pwd, rabbitmq_host, rabbitmq_port)
+    params = URLParameters(url)
+    connection = BlockingConnection(params)
     channel = connection.channel()
     channel.queue_declare(queue="blur-service")
 

@@ -12,7 +12,8 @@ class FaceBlur:
 
     def loadSourceImage(self):
         try:
-            sourceObject = self.s3client.Object("blur-service-bucket", self.sourceImage[1:])
+            aws_bucket = os.environ.get("AWS_BUCKET")
+            sourceObject = self.s3client.Object(aws_bucket, self.sourceImage[1:])
             sourceObject.download_file(self.sourceImage)
             sourceObject.delete()
             self.image = load_image_file(self.sourceImage)
@@ -39,9 +40,10 @@ class FaceBlur:
 
     def save(self):
         try:
+            aws_bucket = os.environ.get("AWS_BUCKET")
             self.image = Image.fromarray(self.image)
             self.image.save(self.destinationPath)
-            self.s3client.Object("blur-service-bucket", self.destinationPath[1:]).upload_file(self.destinationPath)
+            self.s3client.Object(aws_bucket, self.destinationPath[1:]).upload_file(self.destinationPath)
         except FileNotFoundError:
             print(f"file {self.destinationPath} does not exist")
             exit(1)
