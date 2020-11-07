@@ -18,11 +18,15 @@ func formatter(err error, msg string) error {
 }
 
 func init() {
+
 	var err error
+	rabbitmq_user := os.Getenv("RABBITMQ_USER")
+	rabbitmq_pwd := os.Getenv("RABBITMQ_PWD")
+	rabbitmq_host := os.Getenv("RABBITMQ_HOST")
+	rabbitmq_port := os.Getenv("RABBITMQ_PORT")
+	rabbitmq_queue := os.Getenv("RABBITMQ_QUEUE")
 
-	url := os.Getenv("AMQP_URL")
-
-	conn, err = amqp.Dial(url)
+	conn, err := amqp.Dial("amqp://" + rabbitmq_user + ":" + rabbitmq_pwd + "@" + rabbitmq_host + ":" + rabbitmq_port)
 	if err != nil {
 		logErr(err, "Failed to connect to RabbitMQ")
 	}
@@ -36,7 +40,7 @@ func init() {
 	//Declaring the queue, which will
 	queue, err = channel.QueueDeclare(
 		// Assigning a name to the declared queue
-		"blur-service",
+		rabbitmq_queue,
 		false,
 		false,
 		false,
