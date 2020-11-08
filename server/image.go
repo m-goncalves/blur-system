@@ -37,17 +37,15 @@ type Image_metadata struct {
 var (
 	dbConnection string
 	database     string
-	//table        string
-	sess *session.Session
+	sess         *session.Session
 )
 
 func init() {
-	//PASSAR CREDENCIAIS NO DOCKER COMPOSEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE
 	region := os.Getenv("REGION")
 	user := os.Getenv("MYSQL_USER")
 	pwd := os.Getenv("MYSQL_PASSWORD")
 	database = os.Getenv("MYSQL_DATABASE")
-	//table = os.Getenv("MYSQL_METADATA_TABLE")
+
 	dbConnection = fmt.Sprintf("%s:%s@tcp(mysql)/%s?charset=utf8mb4&parseTime=True&loc=Local", user, pwd, database)
 
 	db, err := gorm.Open(mysql.Open(dbConnection), &gorm.Config{})
@@ -60,7 +58,7 @@ func init() {
 
 	defer sqlDB.Close()
 	sess, err = session.NewSession(&aws.Config{
-		Credentials: credentials.NewEnvCredentials(), //PASSAR CREDENCIAIS NO DOCKER COMPOSEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE
+		Credentials: credentials.NewEnvCredentials(),
 		Region:      aws.String(region),
 	})
 	if err != nil {
@@ -68,7 +66,6 @@ func init() {
 	}
 }
 func (img *image) save() error {
-	//writing a temporary file to our server: path + pattern (assigning a random number the file name)
 	bucket := os.Getenv("AWS_BUCKET")
 	tempFile, err := ioutil.TempFile(os.Getenv("SOURCEDIR"), "upload-*.png")
 	if err != nil {
@@ -88,7 +85,6 @@ func (img *image) save() error {
 		return err
 	}
 
-	// saves the metadata
 	img.path = result.Location
 	err = img.saveMetadataMysql()
 	if err != nil {
