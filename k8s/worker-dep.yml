@@ -1,0 +1,59 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata: 
+  name: worker
+spec:
+  selector:
+    matchLabels:
+      app: blur
+  template:
+    metadata:
+      labels:
+        app: blur
+    spec:
+      containers:
+      - name: worker
+        image: marjugoncalves/blur-worker 
+        ports:
+        - containerPort: 8081
+        env:
+          - name: RABBITMQ_USER
+            valueFrom:
+              configMapKeyRef:
+                name: blur-configmap
+                key: rabbitmq_user
+          - name: RABBITMQ_PWD
+            valueFrom:
+              configMapKeyRef:
+                name: blur-configmap
+                key: rabbitmq_pwd
+          - name: RABBITMQ_PORT
+            valueFrom:
+              configMapKeyRef:
+                name: blur-configmap
+                key:  rabbitmq_port
+          - name: RABBITMQ_HOST
+            valueFrom:
+              configMapKeyRef:
+                name: blur-configmap
+                key:  rabbitmq_host
+          - name: RABBITMQ_QUEUE
+            valueFrom:
+              configMapKeyRef:
+                name: blur-configmap
+                key: rabbitmq_queue
+          - name: AWS_ACCESS_KEY_ID
+            valueFrom:
+              configMapKeyRef:
+                name: blur-configmap
+                key: aws_access_key_id
+          - name: AWS_SECRET_ACCESS_KEY
+            valueFrom:
+              configMapKeyRef:
+                name: blur-configmap
+                key: aws_secret_access_key
+          - name: AWS_BUCKET
+            valueFrom:
+              configMapKeyRef:
+                name: blur-configmap
+                key: aws_bucket
