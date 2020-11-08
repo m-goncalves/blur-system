@@ -1,3 +1,6 @@
+configmap.yml
+webservice-secrets.yml
+.DS_Store
 .env
 Makefile
 .vscode
