@@ -26,7 +26,6 @@ type image struct {
 }
 
 type Image_metadata struct {
-	gorm.Model
 	ID        int
 	Name      string
 	Size      int
