@@ -7,6 +7,12 @@ spec:
     app: blur-rabbitmq
   ports:
   - protocol: TCP
+    name: internal
     port: 5672
     targetPort: 5672
+  - protocol: TCP
+    name: ui
+    port: 15672
+    targetPort: 15672
+    nodePort: 30001
   type: NodePort
