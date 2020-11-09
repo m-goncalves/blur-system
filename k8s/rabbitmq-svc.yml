@@ -4,7 +4,7 @@ metadata:
   name: rabbitmq
 spec:
   selector:
-    app: blur-rabbitmq
+    app: blur
   ports:
   - protocol: TCP
     name: internal
