@@ -26,6 +26,7 @@ type image struct {
 }
 
 type Image_metadata struct {
+	//gorm.Model
 	ID        int
 	Name      string
 	Size      int
@@ -36,6 +37,7 @@ type Image_metadata struct {
 var (
 	dbConnection string
 	database     string
+	table        string
 	sess         *session.Session
 )
 
@@ -44,6 +46,7 @@ func init() {
 	user := os.Getenv("MYSQL_USER")
 	pwd := os.Getenv("MYSQL_PASSWORD")
 	database = os.Getenv("MYSQL_DATABASE")
+	table = os.Getenv("MYSQL_METADATA_TABLE")
 
 	dbConnection = fmt.Sprintf("%s:%s@tcp(mysql)/%s?charset=utf8mb4&parseTime=True&loc=Local", user, pwd, database)
 
