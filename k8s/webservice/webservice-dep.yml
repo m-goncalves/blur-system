@@ -16,6 +16,7 @@ spec:
         image: marjugoncalves/blur-service
         ports:
         - containerPort: 8080
+        
         env:
           - name: RABBITMQ_USER
             valueFrom:
@@ -82,3 +83,11 @@ spec:
               configMapKeyRef:
                 name: blur-configmap
                 key: aws_bucket
+        volumeMounts:                     # delete volume when project is working on k8s
+          - name: webservice
+            mountPath: /source-images
+      volumes:                              
+      - name: webservice
+        persistentVolumeClaim:
+          claimName: webservice-pvc
+
