@@ -1,0 +1,40 @@
+# Rabbitmq instances will be running as this service account.
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: rabbitmq
+
+---
+
+#The rabbitqm discovery plugin needs permission to make calls to
+# the k8s-api in order to discover other peers on the network.
+# To allow that a role has to be created.
+
+kind: Role
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: rabbitmq
+rules:
+- apiGroups:
+    - ""
+  resources:
+    - endpoints
+  verbs:
+    - get
+    - list
+    - watch
+---
+
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: rabbitmq
+  namespace: rabbits
+subjects:
+- kind: ServiceAccount
+  name: rabbitmq
+  namespace: rabbits
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: rabbitmq
