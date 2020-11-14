@@ -2,14 +2,16 @@ package server
 
 import (
 	"fmt"
-	"io/ioutil"
 	"mime/multipart"
 	"os"
+	"strings"
 	"time"
 
+	"github.com/aws/aws-sdk-go/service/s3"
 	"github.com/aws/aws-sdk-go/service/s3/s3manager"
 
 	"github.com/aws/aws-sdk-go/aws"
+	"github.com/aws/aws-sdk-go/aws/awserr"
 	"github.com/aws/aws-sdk-go/aws/credentials"
 	"github.com/aws/aws-sdk-go/aws/session"
 	_ "github.com/go-sql-driver/mysql"
@@ -22,6 +24,7 @@ type image struct {
 	size int
 	path string
 	key  string
+	num  int
 	file multipart.File
 }
 
@@ -69,13 +72,9 @@ func init() {
 }
 func (img *image) save() error {
 	bucket := os.Getenv("AWS_BUCKET")
-	tempFile, err := ioutil.TempFile(os.Getenv("SOURCEDIR"), "upload-*.png")
-	if err != nil {
-		return err
-	}
-	defer tempFile.Close()
 
-	img.key = tempFile.Name()
+	img.checkKey(bucket, img.genS3Key("blurred-images"))
+
 	uploader := s3manager.NewUploader(sess)
 
 	result, err := uploader.Upload(&s3manager.UploadInput{
@@ -112,4 +111,46 @@ func (img image) saveMetadataMysql() error {
 
 	return result.Error
 
+}
+
+func (img image) genS3Key(dir string) string {
+	if img.num == 0 {
+		return fmt.Sprintf("/%s/%s", dir, img.name)
+	}
+
+	ext := strings.LastIndex(img.name, ".")
+	return fmt.Sprintf("/%s/%s(%d)%s", dir, img.name[:ext], img.num, img.name[ext:])
+}
+
+func s3objectExists(bucket, key string) (bool, error) {
+	svc := s3.New(sess)
+	_, err := svc.GetObject(&s3.GetObjectInput{
+		Bucket: aws.String(bucket),
+		Key:    aws.String(key),
+	})
+
+	if err != nil {
+		if aerr, ok := err.(awserr.Error); ok && aerr.Code() == s3.ErrCodeNoSuchKey {
+			return false, nil
+		}
+		return false, err
+	}
+
+	return true, nil
+}
+
+func (img *image) checkKey(bucket, key string) error {
+	exists, err := s3objectExists(bucket, key)
+	if err != nil {
+		return err
+	}
+
+	if exists {
+		img.num++
+		return img.checkKey(bucket, img.genS3Key("blurred-images"))
+	}
+
+	img.key = img.genS3Key("source-images")
+
+	return nil
 }
