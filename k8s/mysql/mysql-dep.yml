@@ -37,4 +37,3 @@ spec:
               secretKeyRef:
                 name: webservice-secrets
                 key: mysql_database
-        
