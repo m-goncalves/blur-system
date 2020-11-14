@@ -3,4 +3,5 @@ webservice-secrets.yml
 .DS_Store
 .env
 Makefile
+rabbitmq-secrets.yml
 .vscode
