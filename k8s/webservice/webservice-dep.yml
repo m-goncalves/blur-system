@@ -15,8 +15,7 @@ spec:
       - name: blur-service
         image: marjugoncalves/blur-service
         ports:
-        - containerPort: 8080
-        
+        - containerPort: 8080   
         env:
           - name: RABBITMQ_USER
             valueFrom:
@@ -58,11 +57,6 @@ spec:
               secretKeyRef:
                 name: webservice-secrets
                 key: mysql_database
-          # - name: MYSQL_METADATA_TABLE
-          #   valueFrom:
-          #     secretKeyRef:
-          #       name: webservice-secrets
-          #       key: mysql_metadata_table 
           - name: AWS_ACCESS_KEY_ID
             valueFrom:
               configMapKeyRef:
@@ -83,11 +77,12 @@ spec:
               configMapKeyRef:
                 name: blur-configmap
                 key: aws_bucket
-        volumeMounts:                     # delete volume when project is working on k8s
-          - name: webservice
-            mountPath: /source-images
-      volumes:                              
-      - name: webservice
-        persistentVolumeClaim:
-          claimName: webservice-pvc
+      #   volumeMounts:                     # delete volume when project is working on k8s
+      #     - name: webservice
+      #       mountPath: /tmp
+      #       readOnly: false
+      # volumes:                              
+      # - name: webservice
+      #   persistentVolumeClaim:
+      #     claimName: webservice-pvc
 
