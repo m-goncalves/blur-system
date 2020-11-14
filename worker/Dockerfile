@@ -24,5 +24,3 @@ WORKDIR /home/worker
 COPY . .
 
 ENTRYPOINT python worker.py
-
-VOLUME ["/source-images", "/blurred-images"]
