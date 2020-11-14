@@ -3,6 +3,11 @@ services:
     rabbitmq:
         image: rabbitmq:3-management
         container_name: rabbitmq
+        healthcheck:
+            test: rabbitmq-diagnostics check_running
+            interval: 30s
+            timeout: 30s
+            retries: 3
         restart: always
         hostname: rabbitmq
         ports:
@@ -12,10 +17,13 @@ services:
             RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PWD}
             RABBITMQ_DEFAULT_VHOST: "/"
     service:
-        depends_on:
-            - rabbitmq
-        build: .
         container_name: service
+        depends_on:
+            rabbitmq:
+                condition: service_healthy
+            mysql:
+                condition: service_healthy
+        build: .
         restart: always
         volumes:
             #use normal volumes later
@@ -66,6 +74,11 @@ services:
             - rabbitmq
         image: mysql:8.0
         container_name: mysql
+        healthcheck:
+            test: "/usr/bin/mysql --user=${MYSQL_USER} --password=${MYSQL_PASSWORD} --execute \"SHOW DATABASES;\""
+            timeout: 200s
+            interval: 10s
+            retries: 20
         restart: always
         environment:
             MYSQL_USER: ${MYSQL_USER}
