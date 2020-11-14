@@ -25,7 +25,6 @@ func init() {
 	rabbitmq_host := os.Getenv("RABBITMQ_HOST")
 	rabbitmq_port := os.Getenv("RABBITMQ_PORT")
 	rabbitmq_queue := os.Getenv("RABBITMQ_QUEUE")
-
 	conn, err := amqp.Dial("amqp://" + rabbitmq_user + ":" + rabbitmq_pwd + "@" + rabbitmq_host + ":" + rabbitmq_port)
 	if err != nil {
 		logErr(err, "Failed to connect to RabbitMQ")
