@@ -4,7 +4,7 @@ metadata:
   name: rabbitmq
 spec:
   serviceName: rabbitmq
-  replicas: 3
+  replicas: 6
   selector:
     matchLabels:
       app: rabbitmq

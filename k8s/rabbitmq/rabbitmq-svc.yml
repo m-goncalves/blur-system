@@ -14,4 +14,4 @@ spec:
   - port: 15672
     name: ui
   selector:
-    app: blur
+    app: rabbitmq
