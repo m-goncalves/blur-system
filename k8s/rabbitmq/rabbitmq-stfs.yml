@@ -4,7 +4,7 @@ metadata:
   name: rabbitmq
 spec:
   serviceName: rabbitmq
-  replicas: 6
+  replicas: 3
   selector:
     matchLabels:
       app: rabbitmq
@@ -36,6 +36,18 @@ spec:
           name: amqp
         - containerPort: 15672
           name: ui
+        livenessProbe:
+          exec:
+            command: ["rabbitmq-diagnostics", "check running"]
+          initialDelaySeconds: 60
+          periodSeconds: 60
+          timeoutSeconds: 15
+        readinessProbe:
+          exec:
+            command: ["rabbitmq-diagnostics", "check_port_connectivity"]
+          initialDelaySeconds: 20
+          periodSeconds: 60
+          timeoutSeconds: 10
         env:
         - name: RABBIT_POD_NAME
           valueFrom:
