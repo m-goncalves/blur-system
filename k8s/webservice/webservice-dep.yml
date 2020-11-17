@@ -11,6 +11,26 @@ spec:
       labels:
         app: blur
     spec:
+      initContainers:
+      - name: check-rabbitmq
+        image: busybox
+        command: ['sh', '-c',
+        'until wget http://$(RABBITMQ_USER):$(RABBITMQ_PWD)@rabbitmq:15672/api/aliveness-test/%2F;
+        do echo waiting; sleep 2; done;']
+        env:
+          - name: RABBITMQ_USER
+            valueFrom:
+              configMapKeyRef:
+                name: blur-configmap
+                key: rabbitmq_user
+          - name: RABBITMQ_PWD
+            valueFrom:
+              configMapKeyRef:
+                name: blur-configmap
+                key: rabbitmq_pwd
+      - name: check-mysql
+        image: busybox
+        command: ['sh', '-c', 'until nslookup mysql; do echo waiting for mysql; sleep 2; done;']
       containers:
       - name: blur-service
         image: marjugoncalves/blur-service
@@ -77,12 +97,3 @@ spec:
               configMapKeyRef:
                 name: blur-configmap
                 key: aws_bucket
-      #   volumeMounts:                     # delete volume when project is working on k8s
-      #     - name: webservice
-      #       mountPath: /tmp
-      #       readOnly: false
-      # volumes:                              
-      # - name: webservice
-      #   persistentVolumeClaim:
-      #     claimName: webservice-pvc
-
