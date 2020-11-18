@@ -29,6 +29,29 @@ spec:
       containers:
       - name: rabbitmq
         image: rabbitmq:3.8-management
+        lifecycle:
+          postStart:
+            exec:
+              command:
+                - /bin/sh
+                - -c
+                - >
+                  until rabbitmqctl --erlang-cookie ${RABBITMQ_ERLANG_COOKIE} await_startup; do sleep 2; done;
+                  rabbitmqctl set_policy ha-fed ".*" 
+                  '{"federation-upstream-set":"all", "ha-mode":"nodes", "ha-params":["rabbit@rabbit-1","rabbit@rabbit-2","rabbit@rabbit-3"]}'
+                  --priority 1 --apply-to queues
+        # livenessProbe:
+        #   exec:
+        #     command: ["rabbitmq-diagnostics", "check_port_connectivity"]
+        #   initialDelaySeconds: 60
+        #   periodSeconds: 60
+        #   timeoutSeconds: 15
+        # readinessProbe:
+        #   exec:
+        #     command: ["rabbitmq-diagnostics", "check_port_connectivity",]
+        #   initialDelaySeconds: 20
+        #   periodSeconds: 60
+        #   timeoutSeconds: 15
         ports:
         - containerPort: 4369
           name: discovery
@@ -36,18 +59,6 @@ spec:
           name: amqp
         - containerPort: 15672
           name: ui
-        livenessProbe:
-          exec:
-            command: ["rabbitmq-diagnostics", "check running"]
-          initialDelaySeconds: 60
-          periodSeconds: 60
-          timeoutSeconds: 15
-        readinessProbe:
-          exec:
-            command: ["rabbitmq-diagnostics", "check_port_connectivity"]
-          initialDelaySeconds: 20
-          periodSeconds: 60
-          timeoutSeconds: 10
         env:
         - name: RABBIT_POD_NAME
           valueFrom:
