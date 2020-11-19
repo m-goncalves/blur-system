@@ -38,7 +38,7 @@ spec:
                 - >
                   until rabbitmqctl --erlang-cookie ${RABBITMQ_ERLANG_COOKIE} await_startup; do sleep 2; done;
                   rabbitmqctl set_policy ha-fed ".*" 
-                  '{"federation-upstream-set":"all", "ha-mode":"nodes", "ha-params":["rabbit@rabbit-1","rabbit@rabbit-2","rabbit@rabbit-3"]}'
+                  '{"federation-upstream-set":"all", "ha-mode":"nodes", "ha-params":["rabbit@rabbit-1","rabbit@rabbit-2"]}'
                   --priority 1 --apply-to queues
         livenessProbe:
           exec:
@@ -47,11 +47,11 @@ spec:
           periodSeconds: 60
           timeoutSeconds: 15
         readinessProbe:
-        #   exec:
-        #     command: ["rabbitmq-diagnostics", "check_port_connectivity",]
-        #   initialDelaySeconds: 20
-        #   periodSeconds: 60
-        #   timeoutSeconds: 15
+          exec:
+            command: ["rabbitmq-diagnostics", "check_running"]
+          initialDelaySeconds: 20
+          periodSeconds: 60
+          timeoutSeconds: 15
         ports:
         - containerPort: 4369
           name: discovery
