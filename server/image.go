@@ -51,7 +51,7 @@ func init() {
 	database = os.Getenv("MYSQL_DATABASE")
 	table = os.Getenv("MYSQL_METADATA_TABLE")
 
-	dbConnection = fmt.Sprintf("%s:%s@tcp(mysql)/%s?charset=utf8mb4&parseTime=True&loc=Local", user, pwd, database)
+	dbConnection = fmt.Sprintf("%s:%s@tcp(mysql-0.mysql)/%s?charset=utf8mb4&parseTime=True&loc=Local", user, pwd, database)
 
 	db, err := gorm.Open(mysql.Open(dbConnection), &gorm.Config{})
 	sqlDB, err := db.DB()
