@@ -36,7 +36,7 @@ spec:
         - name: config-map
           mountPath: /mnt/config-map
       - name: clone-mysql
-        image: bitnami/percona-xtrabackup:8
+        image: bitnami/percona-xtrabackup:8.0.14
         command:
         - bash
         - "-c"
@@ -108,7 +108,7 @@ spec:
           periodSeconds: 2
           timeoutSeconds: 1
       - name: xtrabackup
-        image: gcr.io/google-samples/xtrabackup:1.0
+        image: bitnami/percona-xtrabackup:8.0.14
         env:
         - name: MYSQL_USER
           valueFrom:
