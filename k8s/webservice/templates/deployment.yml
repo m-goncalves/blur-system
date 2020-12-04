@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.name }}
+spec:
+  selector:
+    matchLabels:
+      app: {{ .Values.labels}}
+  template:
+    metadata:
+      annotations:
+        checksum/config: {{ include (print $.Template.BasePath "/configmap.yml") . | sha256sum }}
+      labels:
+        app: {{ .Values.labels }}
+    spec:
+      initContainers:
+      - name: check-rabbitmq
+        image: {{ .Values.initContainers.image }}
+        command: ['sh', '-c',
+        'until wget http://$(RABBITMQ_DEFAULT_USER):$(RABBITMQ_DEFAULT_PASS)@rabbitmq:15672/api/aliveness-test/%2F; 
+        do echo waiting; sleep 2; done;']
+        envFrom:
+        - configMapRef:
+            name: {{ .Values.name }}
+      - name: check-mysql
+        image: {{ .Values.initContainers.image }}
+        command: ['sh', '-c', 'until nslookup mysql; do echo waiting for mysql; sleep 2; done;']
+      containers:
+      - name: {{ .Values.name }}
+        image: {{ .Values.deployment.image }}
+        ports:
+        - containerPort: {{ .Values.ports.port }}   
+        envFrom:
+        - configMapRef:
+            name: {{ .Values.name }}

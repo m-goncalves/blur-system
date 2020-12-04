@@ -1,0 +1,8 @@
+deployment:
+  image: marjugoncalves/blur-service
+name: webservice
+labels: blur
+ports:
+  port: 8080
+initContainers:
+  image: busybox:1.31.1
