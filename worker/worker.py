@@ -17,8 +17,8 @@ def destinationPath(sourcePath) -> str:
 
 def main():
 
-    rabbitmq_user = os.environ.get("RABBITMQ_USER")
-    rabbitmq_pwd = os.environ.get("RABBITMQ_PWD")
+    rabbitmq_user = os.environ.get("RABBITMQ_DEFAULT_USER")
+    rabbitmq_pwd = os.environ.get("RABBITMQ_DEFAULT_PASS")
     rabbitmq_host = os.environ.get("RABBITMQ_HOST")
     rabbitmq_port = os.environ.get("RABBITMQ_PORT")
     rabbitmq_queue = os.environ.get("RABBITMQ_QUEUE")
@@ -35,7 +35,7 @@ def main():
         blur.locateFaces()
         blur.blurFaces()
         blur.save()
-    
+
     channel.basic_consume(queue=rabbitmq_queue, on_message_callback=callback, auto_ack=True)
 
     channel.start_consuming()

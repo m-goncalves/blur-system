@@ -20,8 +20,8 @@ func formatter(err error, msg string) error {
 func init() {
 
 	var err error
-	rabbitmq_user := os.Getenv("RABBITMQ_USER")
-	rabbitmq_pwd := os.Getenv("RABBITMQ_PWD")
+	rabbitmq_user := os.Getenv("RABBITMQ_DEFAULT_USER")
+	rabbitmq_pwd := os.Getenv("RABBITMQ_DEFAULT_PASS")
 	rabbitmq_host := os.Getenv("RABBITMQ_HOST")
 	rabbitmq_port := os.Getenv("RABBITMQ_PORT")
 	rabbitmq_queue := os.Getenv("RABBITMQ_QUEUE")

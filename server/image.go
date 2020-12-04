@@ -45,13 +45,14 @@ var (
 )
 
 func init() {
-	region := os.Getenv("REGION")
+	region := os.Getenv("AWS_REGION")
 	user := os.Getenv("MYSQL_USER")
 	pwd := os.Getenv("MYSQL_PASSWORD")
 	database = os.Getenv("MYSQL_DATABASE")
 	table = os.Getenv("MYSQL_METADATA_TABLE")
+	master := os.Getenv("MYSQL_MASTER")
 
-	dbConnection = fmt.Sprintf("%s:%s@tcp(mysql-0.mysql)/%s?charset=utf8mb4&parseTime=True&loc=Local", user, pwd, database)
+	dbConnection = fmt.Sprintf("%s:%s@tcp(%s)/%s?charset=utf8mb4&parseTime=True&loc=Local", user, pwd, master, database)
 
 	db, err := gorm.Open(mysql.Open(dbConnection), &gorm.Config{})
 	sqlDB, err := db.DB()
