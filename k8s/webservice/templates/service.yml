@@ -4,10 +4,10 @@ metadata:
   name: {{ .Values.name }}
 spec:
   selector:
-    app: blur
+    app: {{ .Values.labels }}
   ports:
     - protocol: TCP
-      port: 8080
-      targetPort: 8080
-      nodePort: 30002
+      port: {{ .Values.ports.port }}
+      targetPort: {{ .Values.ports.targetPort }}
+      nodePort: {{ .Values.ports.nodePort }}
   type: NodePort

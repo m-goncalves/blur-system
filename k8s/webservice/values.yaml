@@ -1,8 +1,13 @@
 deployment:
-  image: marjugoncalves/blur-service
+  image: marjugoncalves/blur-service:1.0
+  tag: "1.0"
+  replicaCount: 1
 name: webservice
 labels: blur
 ports:
   port: 8080
+  containerPort: 8080
+  targetPort: 8080
+  nodePort: 30002
 initContainers:
   image: busybox:1.31.1
