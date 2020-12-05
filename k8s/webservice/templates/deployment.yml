@@ -25,7 +25,7 @@ spec:
             name: {{ .Values.name }}
       - name: check-mysql
         image: {{ .Values.initContainers.image }}
-        command: ['sh', '-c', 'until nslookup mysql; do echo waiting for mysql; sleep 2; done;']
+        command: ['sh', '-c', 'until nslookup 10.104.253.221; do echo waiting for mysql; sleep 2; done;'] #why just working with clusterIP? and string connection mysql.svc.cluster.local 
       containers:
       - name: {{ .Values.name }}
         image: {{ .Values.deployment.image }}
