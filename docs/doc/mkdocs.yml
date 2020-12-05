@@ -1,0 +1,4 @@
+site_name: Faceblur System
+nav:
+  - home: index.md
+  - about: about.md
