@@ -4,5 +4,4 @@ webservice-secrets.yml
 .env
 Makefile
 rabbitmq-secrets.yml
-secrets.yml
 .vscode
