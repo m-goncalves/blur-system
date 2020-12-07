@@ -13,8 +13,8 @@ services:
         ports:
             - 15672:15672
         environment:
-            RABBITMQ_DEFAULT_USER: ${RABBITMQ_USER}
-            RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PWD}
+            RABBITMQ_DEFAULT_USER: ${RABBITMQ_DEFAULT_USER}
+            RABBITMQ_DEFAULT_PASS: ${RABBITMQ_DEFAULT_PASS}
             RABBITMQ_DEFAULT_VHOST: "/"
     service:
         container_name: service
@@ -23,7 +23,7 @@ services:
                 condition: service_healthy
             mysql:
                 condition: service_healthy
-        build: .
+        image: marjugoncalves/blur-service:1.1
         restart: always
         volumes:
             #use normal volumes later
@@ -33,12 +33,13 @@ services:
         ports:
             - 8080:8080
         environment:
-            RABBITMQ_USER: ${RABBITMQ_USER}
-            RABBITMQ_PWD: ${RABBITMQ_PWD}
+            RABBITMQ_DEFAULT_USER: ${RABBITMQ_DEFAULT_USER}
+            RABBITMQ_DEFAULT_PASS: ${RABBITMQ_DEFAULT_PASS}
             RABBITMQ_HOST: ${RABBITMQ_HOST}
             RABBITMQ_PORT: ${RABBITMQ_PORT}
             RABBITMQ_QUEUE: ${RABBITMQ_QUEUE}
             MYSQL_USER: ${MYSQL_USER}
+            MYSQL_MASTER: ${MYSQL_MASTER}
             MYSQL_PASSWORD: ${MYSQL_PASSWORD}
             MYSQL_DATABASE: ${MYSQL_DATABASE}
             MYSQL_METADATA_TABLE: ${MYSQL_METADATA_TABLE}
@@ -49,12 +50,12 @@ services:
     worker:
         depends_on:
             - rabbitmq
-        build: worker/
+        image: marjugoncalves/blur-worker:1.1
         container_name: worker
         restart: always
         environment:
-            RABBITMQ_USER: ${RABBITMQ_USER}
-            RABBITMQ_PWD: ${RABBITMQ_PWD}
+            RABBITMQ_DEFAULT_USER: ${RABBITMQ_DEFAULT_USER}
+            RABBITMQ_DEFAULT_PASS: ${RABBITMQ_DEFAULT_PASS}
             RABBITMQ_HOST: ${RABBITMQ_HOST}
             RABBITMQ_PORT: ${RABBITMQ_PORT}
             RABBITMQ_QUEUE: ${RABBITMQ_QUEUE}
