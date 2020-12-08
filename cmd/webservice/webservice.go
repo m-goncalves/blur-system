@@ -14,7 +14,6 @@ func main() {
 	http.HandleFunc("/", server.UserInterface)
 	http.HandleFunc("/blur", server.Blur)
 	log.Println("serving on port:", port)
-	//setting up port to listen on.
 	err := http.ListenAndServe(":8080", nil)
 	if err != nil {
 		panic(fmt.Sprintf("server stoped running %s", err))
