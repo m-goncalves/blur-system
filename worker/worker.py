@@ -12,7 +12,8 @@ def destinationPath(sourcePath) -> str:
     barIdx = sourcePath.rfind("/")
     if barIdx > 0:
         sourcePath = sourcePath[barIdx+1:]
-
+    print("function destinationPath")
+    print(destinationFolder + "/" + sourcePath)
     return f"{destinationFolder}/{sourcePath}"
 
 def main():
