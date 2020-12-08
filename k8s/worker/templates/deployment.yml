@@ -29,3 +29,16 @@ spec:
         envFrom:
         - configMapRef:
             name: {{ .Values.name }}
+        volumeMounts:
+        - name: source-images
+          mountPath: /source-images
+        - name: blurred-images
+          mountPath: /blurred-images   
+      volumes:
+      - name: source-images
+        hostPath:
+          path: /home/docker
+      - name: blurred-images
+        hostPath:
+          path: /home/docker
+        

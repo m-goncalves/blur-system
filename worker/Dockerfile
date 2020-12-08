@@ -23,4 +23,6 @@ WORKDIR /home/worker
 
 COPY . .
 
+VOLUME /source-images /blurred-images
+
 ENTRYPOINT python worker.py
