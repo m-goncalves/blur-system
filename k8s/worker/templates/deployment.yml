@@ -30,15 +30,15 @@ spec:
         - configMapRef:
             name: {{ .Values.name }}
         volumeMounts:
-        - name: source-images
-          mountPath: /source-images
-        - name: blurred-images
-          mountPath: /blurred-images   
+        - name: {{ .Values.volumes.name }}
+          mountPath: {{ .Values.volumeMounts.original }}
+        - name: {{ .Values.volumes.name }}
+          mountPath: {{ .Values.volumeMounts.blurred }}  
       volumes:
-      - name: source-images
+      - name: {{ .Values.volumes.name }}
         hostPath:
-          path: /home/docker
-      - name: blurred-images
+          path: {{ .Values.volumes.hostPath }}
+      - name: {{ .Values.volumes.name }}
         hostPath:
-          path: /home/docker
+          path: {{ .Values.volumes.hostPath }}
         
