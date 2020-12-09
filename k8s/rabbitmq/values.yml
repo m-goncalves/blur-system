@@ -9,6 +9,7 @@ image:
   pullPolicy: IfNotPresent
 clusterDomain: cluster.local
 auth:
+  username: user
   existingPasswordSecret: rabbit
   existingErlangSecret: rabbit
   tls:
