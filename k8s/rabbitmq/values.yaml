@@ -9,11 +9,8 @@ image:
   pullPolicy: IfNotPresent
 clusterDomain: cluster.local
 auth:
-  username: user #try to find out how to avoid passing credentials like this
-  password: pass
-  # existingPasswordSecret: rabbit
-  erlangCookie: V0lXVkhDRFRDSVVBV0FOTE1RQVc=
-  # existingErlangSecret: 
+  existingPasswordSecret: rabbit
+  existingErlangSecret: rabbit
   tls:
     enabled: false
     failIfNoPeerCert: true
