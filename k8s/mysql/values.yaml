@@ -12,12 +12,8 @@ commonAnnotations: {}
 commonLabels: {}
 architecture: replication
 auth:
-  rootPassword: "root-password"
-  database: mysql-database
-  username: "blur-user"
-  password: "blur-password"
   replicationUser: replicator
-  replicationPassword: "replicator-password"
+  existingSecret: mysql
   forcePassword: true
   usePasswordFiles: true
   customPasswordFiles: {}
@@ -242,12 +238,8 @@ metrics:
   serviceMonitor:
     ## If the operator is installed in your cluster, set to true to create a Service Monitor Entry
     ##
-    enabled: false
-    ## Specify the namespace in which the serviceMonitor resource will be created
-    ##
-    # namespace: ""
-    ## Specify the interval at which metrics should be scraped
-    ##
+    enabled: true
+    namespace: "default"
     interval: 30s
     ## Specify the timeout after which the scrape is ended
     ##
@@ -260,7 +252,7 @@ metrics:
     honorLabels: false
     ## Specify the release for ServiceMonitor. Sometimes it should be custom for prometheus operator to work
     ##
-    # release: ""
+    release: "prometheus"
     ## Used to pass Labels that are used by the Prometheus installed in your cluster to select Service Monitors to work with
     ## ref: https://github.com/coreos/prometheus-operator/blob/master/Documentation/api.md#prometheusspec
     ##

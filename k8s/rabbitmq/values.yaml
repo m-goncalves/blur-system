@@ -9,10 +9,11 @@ image:
   pullPolicy: IfNotPresent
 clusterDomain: cluster.local
 auth:
-  username: user
+  username: user #try to find out how to avoid passing credentials like this
   password: pass
+  # existingPasswordSecret: rabbit
   erlangCookie: V0lXVkhDRFRDSVVBV0FOTE1RQVc=
-  # existingErlangSecret: name-of-existing-secret
+  # existingErlangSecret: 
   tls:
     enabled: false
     failIfNoPeerCert: true
@@ -46,7 +47,7 @@ extraContainerPorts: []
 configuration: |-
   ## Username and password
   default_user = {{ .Values.auth.username }}
-  default_pass = CHANGEME
+  default_pass = {{ .Values.auth.username }}
   ## Clustering
   cluster_formation.peer_discovery_backend  = rabbit_peer_discovery_k8s
   cluster_formation.k8s.host = kubernetes.default.svc.{{ .Values.clusterDomain }}
@@ -181,20 +182,21 @@ metrics:
   serviceMonitor:
     ## If the operator is installed in your cluster, set to true to create a Service Monitor Entry
     ##
-    enabled: false  #scrap/monitor
+    enabled: true
     interval: 30s
-    honorLabels: false
+    honorLabels: true
     ## Specify the release for ServiceMonitor. Sometimes it should be custom for prometheus operator to work
     ##
-    # release: ""
+    release: "prometheus"
     ## Used to pass Labels that are used by the Prometheus installed in your cluster to select Service Monitors to work with
     ## ref: https://github.com/coreos/prometheus-operator/blob/master/Documentation/api.md#prometheusspec
     ##
-    additionalLabels: {}
+    additionalLabels:
+      release: prometheus
   prometheusRule:
     enabled: false
     additionalLabels: {}
-    namespace: ''
+    namespace: 'default'
     ## List of rules, used as template by Helm.
     ## These are just examples rules inspired from https://awesome-prometheus-alerts.grep.to/rules.html
     # rules:
