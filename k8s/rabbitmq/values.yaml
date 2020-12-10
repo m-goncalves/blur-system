@@ -182,7 +182,7 @@ metrics:
     ##
     enabled: true
     interval: 30s
-    honorLabels: true
+    honorLabels: false
     ## Specify the release for ServiceMonitor. Sometimes it should be custom for prometheus operator to work
     ##
     release: "prometheus"

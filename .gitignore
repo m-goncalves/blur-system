@@ -1,8 +1,8 @@
-configmap.yml
-webservice-secrets.yml
+configmap.yaml
+webservice-secrets.yaml
 .DS_Store
 .env
 Makefile
-rabbitmq-secrets.yml
-secrets.yml
+rabbitmq-secrets.yaml
+secrets.yaml
 .vscode
