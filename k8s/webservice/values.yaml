@@ -1,8 +1,9 @@
 deployment:
   image: marjugoncalves/blur-service:1.1
-  replicaCount: 1
+  minReplicas: 2
+  maxReplicas: 5
 name: webservice
-labels: blur
+labels: blur-service
 ports:
   port: 8080
   containerPort: 8080
