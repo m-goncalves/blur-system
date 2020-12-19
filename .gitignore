@@ -5,4 +5,7 @@ webservice-secrets.yaml
 Makefile
 rabbitmq-secrets.yaml
 secrets.yaml
+.terraform
+terraform.tfstate
+variables.tf
 .vscode
