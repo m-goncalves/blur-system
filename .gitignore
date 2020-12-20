@@ -6,6 +6,7 @@ Makefile
 rabbitmq-secrets.yaml
 secrets.yaml
 .terraform
+.terraform.lock.hcl
 terraform.tfstate
 variables.tf
 .vscode
