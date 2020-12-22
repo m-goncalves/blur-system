@@ -5,9 +5,14 @@ provider "aws" {
   
 }
 
+# ----- Base VPC Networking -----
+
 data "aws_availability_zones" "available_zones" {}
 
+# Creates a virtual private network which will isolate
+# the resources to be created.
 resource "aws_vpc" "blur-vpc" {
+    #Specifies the range of IP adresses for the VPC.
     cidr_block = "10.0.0.0/16"
     tags = "${
         map(
@@ -32,7 +37,10 @@ resource "aws_subnet" "subnet" {
   }"
 }
 
+# The component that allows communication between 
+# the VPC and the internet.
 resource "aws_internet_gateway" "gateway" {
+    # Attaches the gateway to the VPC.
     vpc_id = "${aws_vpc.blur-vpc.id}"
 
     tags = {
@@ -40,6 +48,8 @@ resource "aws_internet_gateway" "gateway" {
     }
 }
 
+# Determines where network traffic from the gateway
+# will be directed. 
 resource "aws_route_table" "route-table" {
   vpc_id = "${aws_vpc.blur-vpc.id}"
 
@@ -56,6 +66,13 @@ resource "aws_route_table_association" "table_association" {
   
 }
 
+# -- Resources required for the master setup --
+
+# This bellow block (IAM role + Policy) allows the EKS service to 
+# manage or retrieve data from other AWS services.
+
+# Similar to a IAM but not uniquely associated with one person.
+# A role can be assumed by anyone who needs it.
 resource "aws_iam_role" "blur-iam-role" {
   name = "eks-cluster"
   assume_role_policy = <<POLICY
@@ -74,12 +91,23 @@ resource "aws_iam_role" "blur-iam-role" {
   POLICY
 }
 
+# Attaches the policy "AmazonEKSClusterPolicy" to the role created above. 
 resource "aws_iam_role_policy_attachment" "blur-iam-role-AmazonEKSClusterPolicy" {
     policy_arn  = "arn:aws:iam::aws:policy/AmazonEKSClusterPolicy"
     role        = "${aws_iam_role.blur-iam-role.name}"
   
 }
 
+# Attaches the policy "AmazonEKSServicePolicy" to the role created above. 
+# resource "aws_iam_role_policy_attachment" "blur-iam-role-AmazonEKSServicePolicy" {
+#     policy_arn  = "arn:aws:iam::aws:policy/AmazonEKSServicePolicy"
+#     role        = "${aws_iam_role.blur-iam-role.name}"
+# }
+
+# Master security group
+
+# # A security group acts as a virtual firewall to control inbound and outbound traffic.
+# This security group will control networking access to the K8S master.
 resource "aws_security_group" "blur-cluster" {
     name            = "eks-blur-cluster"
     description     = "Allows the communucation with the worker nodes"
@@ -97,34 +125,29 @@ resource "aws_security_group" "blur-cluster" {
     }
 }
 
-# resource "aws_security_group_rule" "blur-cluster-ingress-workstation" {
-#     cidr_blocks             = ["A.B.C.D/32"]
-#     description             = "Allow workstation to communicate with the cluster API server"
-#     from_port               = 443
-#     to_port                 = 443
-#     protocol                = "tcp"
-#     security_group_id       = "${aws_security_group.blur-cluster.id}"
-#     type                    = "ingress"
-# }
-
-# Master node
+# The actual master node
 resource "aws_eks_cluster" "blur-cluster" {
     name = "${var.cluster-name}"
+    # Attaches the IAM role created above.
     role_arn = "${aws_iam_role.blur-iam-role.arn}"
 
     vpc_config {
+        # Attaches the security group created for the master.
+        # Attaches also the subnets.
         security_group_ids  = ["${aws_security_group.blur-cluster.id}"]
         subnet_ids          = "${aws_subnet.subnet.*.id}"
     }
 
     depends_on = [ 
         "aws_iam_role_policy_attachment.blur-iam-role-AmazonEKSClusterPolicy",
-        "aws_iam_role_policy_attachment.blur-iam-role-AmazonEKSClusterPolicy"
+        # "aws_iam_role_policy_attachment.blur-iam-role-AmazonEKSServicePolicy"
      ]
 }
 
-### worker nodes
+# -- Resources required for the worker nodes setup --
 
+# IAM role for the workers. Allows worker nodes to manage or retrieve data
+# from other services and  its required for the workers to join the cluster.
 resource "aws_iam_role" "iam-role-worker"{
     name = "eks-worker"
     assume_role_policy = <<POLICY
@@ -143,22 +166,27 @@ resource "aws_iam_role" "iam-role-worker"{
 POLICY
 }
 
+# allows Amazon EKS worker nodes to connect to Amazon EKS Clusters.
 resource "aws_iam_role_policy_attachment" "iam-role-worker-AmazonEKSWorkerNodePolicy" {
     policy_arn = "arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy"
     role = "${aws_iam_role.iam-role-worker.name}"
 }
 
+# This permission is required to modify the IP address configuration of worker nodes
 resource "aws_iam_role_policy_attachment" "iam-role-worker-AmazonEKS_CNI_Policy" {
     policy_arn = "arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy"
     role = "${aws_iam_role.iam-role-worker.name}"
 }
 
+# Allows to list repositories and pull images
 resource "aws_iam_role_policy_attachment" "iam-role-worker-AmazonEC2ContainerRegistryReadOnly" {
     policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
     role = "${aws_iam_role.iam-role-worker.name}"
 
 }
 
+# An instance profile represents an EC2 instances (Who am I?)
+# and assumes a role (what can I do?).
 resource "aws_iam_instance_profile" "worker-node" {
     name = "worker-node"
     role = "${aws_iam_role.iam-role-worker.name}"
@@ -229,8 +257,7 @@ resource "aws_security_group_rule" "cluster-node-ingress-http" {
   
 }
 
-# Worker autoscaling group
-
+# --- Worker autoscaling group ---
 # This data will be used to filter and select an AMI which is compatible with the specific k8s version being deployed
 data "aws_ami" "eks-worker" {
     filter {
@@ -252,6 +279,8 @@ set -o xtrace
 USERDATA
 }
 
+# To spin up an auto scaling group an "aws_launch_configuration" is needed. 
+# This ALC requires an "image_id" as well as a "security_group".
 resource "aws_launch_configuration" "launch_config" {
     associate_public_ip_address     = true
     iam_instance_profile        = "${aws_iam_instance_profile.worker-node.name}"
@@ -266,8 +295,7 @@ resource "aws_launch_configuration" "launch_config" {
   
 }
 
-# Autoscaling group
-
+# Actual autoscaling group
 resource "aws_autoscaling_group" "autoscaling" {
     desired_capacity = 2
     launch_configuration        = "${aws_launch_configuration.launch_config.id}" 
