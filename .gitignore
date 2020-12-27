@@ -1,3 +1,4 @@
+aws-auth-cm.yaml
 configmap.yaml
 .DS_Store
 .env
