@@ -1,7 +1,7 @@
 configmap.yaml
-webservice-secrets.yaml
 .DS_Store
 .env
+kubeconfig_blur-cluster
 Makefile
 rabbitmq-secrets.yaml
 secrets.yaml
@@ -9,5 +9,6 @@ secrets.yaml
 .terraform.lock.hcl
 terraform.tfstate.backup
 terraform.tfstate
+webservice-secrets.yaml
 variables.tf
 .vscode
