@@ -16,7 +16,7 @@ spec:
       - name: {{ .Values.initContainers.name }}
         image: {{ .Values.initContainers.image }}
         command: ['sh', '-c',
-        'until wget http://$(RABBITMQ_DEFAULT_USER):$(RABBITMQ_DEFAULT_PASS)@rabbitmq:15672/api/aliveness-test/%2F; 
+        'until wget http://$(RABBITMQ_DEFAULT_USER):$(RABBITMQ_DEFAULT_PASS)@$(RABBITMQ_HOST):15672/api/aliveness-test/%2F; 
         do echo waiting; sleep 2; done;']
         envFrom:
         - configMapRef:
@@ -30,15 +30,16 @@ spec:
         - configMapRef:
             name: {{ .Values.name }}
         volumeMounts:
-        - name: {{ .Values.volumes.name }}
+        - name: {{ .Values.volumes.name1 }}
           mountPath: {{ .Values.volumeMounts.original }}
-        - name: {{ .Values.volumes.name }}
-          mountPath: {{ .Values.volumeMounts.blurred }}  
+        - name: {{ .Values.volumes.name2 }}
+          mountPath: {{ .Values.volumeMounts.blurred }}
       volumes:
-      - name: {{ .Values.volumes.name }}
-        hostPath:
-          path: {{ .Values.volumes.hostPath }}
-      - name: {{ .Values.volumes.name }}
-        hostPath:
-          path: {{ .Values.volumes.hostPath }}
+        - name: {{ .Values.volumes.name1 }}
+          hostPath:
+            path: {{ .Values.volumes.hostpath}}
+        - name: {{ .Values.volumes.name2 }}
+          hostPath:
+            path: {{ .Values.volumes.hostpath}}
+
         
