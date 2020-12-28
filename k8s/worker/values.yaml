@@ -11,7 +11,8 @@ ports:
   port: 8081
   targetPort: 8081
 volumes:
-  name: blur-volume
+  name1: source-images
+  name2: blurred-images
   hostpath: /home/docker
 volumeMounts:
   original: /source-images
