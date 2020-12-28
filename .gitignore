@@ -1,4 +1,5 @@
 aws-auth-cm.yaml
+*.backup
 configmap.yaml
 .DS_Store
 .env
@@ -8,7 +9,6 @@ rabbitmq-secrets.yaml
 secrets.yaml
 .terraform
 .terraform.lock.hcl
-terraform.tfstate.backup
 terraform.tfstate
 webservice-secrets.yaml
 variables.tf
