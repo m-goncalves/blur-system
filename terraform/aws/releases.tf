@@ -6,15 +6,17 @@ provider "helm" {
 }
 
 resource "helm_release" "blur-mysql" {
-    name                    = "blur-mysql"
-    repository              = "https://charts.bitnami.com/bitnami"
-    values                  = [file("../k8s/mysql/values.yaml")]
+  name                    = "blur-mysql"
+  chart                   = "mysql"
+  repository              = "https://charts.bitnami.com/bitnami"
+  values                  = [file("../k8s/mysql/values.yaml")]
 } 
 
 resource "helm_release" "blur-rabbitmq" {
-    name                    = "blur-rabbitmq"
-    repository              = "https://charts.bitnami.com/bitnami"
-    values                  = [file("../k8s/rabbitmq/values.yaml")]
+  name                    = "blur-rabbitmq"
+  chart                   = "rabbitmq"
+  repository              = "https://charts.bitnami.com/bitnami"
+  values                  = [file("../k8s/rabbitmq/values.yaml")]
 } 
 
 resource "helm_release" "blur-webservice" {
