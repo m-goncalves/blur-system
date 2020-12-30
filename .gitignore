@@ -4,6 +4,7 @@ configmap.yaml
 .DS_Store
 .env
 kubeconfig_blur-cluster
+localhost.yaml
 Makefile
 rabbitmq-secrets.yaml
 secrets.yaml
