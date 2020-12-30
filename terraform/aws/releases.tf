@@ -24,6 +24,11 @@ resource "helm_release" "blur-webservice" {
   chart                     = "../../k8s/webservice"
 }
 
+resource "helm_release" "worker" {
+  name                      = "worker"
+  chart                     = "../../k8s/worker"
+}
+
 module "release-prometheus-operator" {
   source                    = "OpenQAI/release-prometheus-operator/helm"
   helm_chart_namespace      = "default"
