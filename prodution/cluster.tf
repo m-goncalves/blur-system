@@ -2,10 +2,10 @@ terraform {
   required_version = ">= 0.14.0"
 }
 provider "aws" {
-    version = ">= 2.28.1"
-    region = var.region
-    secret_key = var.secret_key
-    access_key = var.access_key
+    version                         = ">= 2.28.1"
+    region                          = var.region
+    secret_key                      = var.secret_key
+    access_key                      = var.access_key
 }
 
 module "eks" {
