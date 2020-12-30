@@ -1,0 +1,4 @@
+- name: template tfvars
+  template:
+      dest: "{{ playbook_dir }}/aws/env.tfvars"
+      src: templates/tfvars.j2

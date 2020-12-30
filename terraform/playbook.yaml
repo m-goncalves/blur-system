@@ -1,0 +1,4 @@
+- name: Applying Cluster Configuration
+  hosts: localhost
+  roles:
+    - common
