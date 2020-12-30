@@ -9,6 +9,7 @@ rabbitmq-secrets.yaml
 secrets.yaml
 .terraform*
 *.tfstate
+*.tfvars
 webservice-secrets.yaml
 variables.tf
 .vscode
