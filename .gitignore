@@ -7,9 +7,8 @@ kubeconfig_blur-cluster
 Makefile
 rabbitmq-secrets.yaml
 secrets.yaml
-.terraform
-.terraform.lock.hcl
-terraform.tfstate
+.terraform*
+*.tfstate
 webservice-secrets.yaml
 variables.tf
 .vscode
