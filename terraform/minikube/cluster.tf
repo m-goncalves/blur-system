@@ -21,22 +21,22 @@ resource "helm_release" "mysql" {
   name = "mysql"
   repository = "https://charts.bitnami.com/bitnami"
   chart = "mysql"
-  values = [file("../k8s/mysql/values.yaml")]
+  values = [file("../../k8s/mysql/values.yaml")]
 }
 
 resource "helm_release" "rabbimq" {
   name = "rabbitmq"
   repository = "https://charts.bitnami.com/bitnami"
   chart = "rabbitmq"
-  values = [file("../k8s/rabbitmq/values.yaml")]
+  values = [file("../../k8s/rabbitmq/values.yaml")]
 }
 
 resource "helm_release" "webservice" {
   name = "webservice"
-  chart = "../k8s/webservice"
+  chart = "../../k8s/webservice"
 }
 
 resource "helm_release" "worker"{
   name = "worker"
-  chart = "../k8s/worker"
+  chart = "../../k8s/worker"
 }
