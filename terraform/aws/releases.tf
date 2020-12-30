@@ -9,19 +9,19 @@ resource "helm_release" "blur-mysql" {
   name                    = "blur-mysql"
   chart                   = "mysql"
   repository              = "https://charts.bitnami.com/bitnami"
-  values                  = [file("../k8s/mysql/values.yaml")]
+  values                  = [file("../../k8s/mysql/values.yaml")]
 } 
 
 resource "helm_release" "blur-rabbitmq" {
   name                    = "blur-rabbitmq"
   chart                   = "rabbitmq"
   repository              = "https://charts.bitnami.com/bitnami"
-  values                  = [file("../k8s/rabbitmq/values.yaml")]
+  values                  = [file("../../k8s/rabbitmq/values.yaml")]
 } 
 
 resource "helm_release" "blur-webservice" {
   name                      = "blur-webservice"
-  chart                     = "../k8s/webservice"
+  chart                     = "../../k8s/webservice"
 }
 
 module "release-prometheus-operator" {
