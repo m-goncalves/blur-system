@@ -1,6 +1,5 @@
-## Bitnami RabbitMQ image version
-## ref: https://hub.docker.com/r/bitnami/rabbitmq/tags/
-##
+## Bitnami RabbitMQ chart
+## ref: https://github.com/bitnami/charts/tree/master/bitnami/rabbitmq
 image:
   registry: docker.io
   repository: bitnami/rabbitmq
@@ -80,9 +79,6 @@ configuration: |-
   total_memory_available_override_value = {{ include "rabbitmq.toBytes" .Values.resources.limits.memory }}
   vm_memory_high_watermark.{{ .Values.memoryHighWatermark.type }} = {{ .Values.memoryHighWatermark.value }}
   {{- end }}
-## Configuration file content: extra configuration
-## Use this instead of `configuration` to add more configuration
-##
 extraConfiguration: |-
   #default_vhost = {{ .Release.Namespace }}-vhost
   #disk_free_limit.absolute = 50MB
@@ -94,8 +90,6 @@ ldap:
   port: '389'
   user_dn_pattern: cn=${username},dc=example,dc=org
   tls:
-    ## If you enabled TLS/SSL you can set advaced options using the advancedConfiguration parameter.
-    ##
     enabled: false
 extraVolumeMounts: []
 extraVolumes: []
@@ -169,29 +163,20 @@ metrics:
   podAnnotations:
     prometheus.io/scrape: 'true'
     prometheus.io/port: '{{ .Values.service.metricsPort }}'
-
-  ## Prometheus Service Monitor
-  ## ref: https://github.com/coreos/prometheus-operator
+## Prometheus Service Monitor
+## ref: https://github.com/coreos/prometheus-operator
   serviceMonitor:
-    ## If the operator is installed in your cluster, set to true to create a Service Monitor Entry
-    ##
     enabled: true
     interval: 30s
     honorLabels: false
-    ## Specify the release for ServiceMonitor. Sometimes it should be custom for prometheus operator to work
-    ##
     release: "prometheus"
-    ## Used to pass Labels that are used by the Prometheus installed in your cluster to select Service Monitors to work with
-    ## ref: https://github.com/coreos/prometheus-operator/blob/master/Documentation/api.md#prometheusspec
-    ##
     additionalLabels:
       release: prometheus
   prometheusRule:
     enabled: false
     additionalLabels: {}
     namespace: 'default'
-    ## List of rules, used as template by Helm.
-    ## These are just examples rules inspired from https://awesome-prometheus-alerts.grep.to/rules.html
+  ## List of rules, used as template by Helm.
     # rules:
     #   - alert: RabbitmqDown
     #     expr: rabbitmq_up{service="{{ template "rabbitmq.fullname" . }}"} == 0
@@ -201,51 +186,6 @@ metrics:
     #     annotations:
     #       summary: Rabbitmq down (instance {{ "{{ $labels.instance }}" }})
     #       description: RabbitMQ node down
-    #   - alert: ClusterDown
-    #     expr: |
-    #       sum(rabbitmq_running{service="{{ template "rabbitmq.fullname" . }}"})
-    #       < {{ .Values.replicaCount }}
-    #     for: 5m
-    #     labels:
-    #       severity: error
-    #     annotations:
-    #       summary: Cluster down (instance {{ "{{ $labels.instance }}" }})
-    #       description: |
-    #           Less than {{ .Values.replicaCount }} nodes running in RabbitMQ cluster
-    #           VALUE = {{ "{{ $value }}" }}
-    #   - alert: ClusterPartition
-    #     expr: rabbitmq_partitions{service="{{ template "rabbitmq.fullname" . }}"} > 0
-    #     for: 5m
-    #     labels:
-    #       severity: error
-    #     annotations:
-    #       summary: Cluster partition (instance {{ "{{ $labels.instance }}" }})
-    #       description: |
-    #           Cluster partition
-    #           VALUE = {{ "{{ $value }}" }}
-    #   - alert: OutOfMemory
-    #     expr: |
-    #       rabbitmq_node_mem_used{service="{{ template "rabbitmq.fullname" . }}"}
-    #       / rabbitmq_node_mem_limit{service="{{ template "rabbitmq.fullname" . }}"}
-    #       * 100 > 90
-    #     for: 5m
-    #     labels:
-    #       severity: warning
-    #     annotations:
-    #       summary: Out of memory (instance {{ "{{ $labels.instance }}" }})
-    #       description: |
-    #           Memory available for RabbmitMQ is low (< 10%)\n  VALUE = {{ "{{ $value }}" }}
-    #           LABELS: {{ "{{ $labels }}" }}
-    #   - alert: TooManyConnections
-    #     expr: rabbitmq_connectionsTotal{service="{{ template "rabbitmq.fullname" . }}"} > 1000
-    #     for: 5m
-    #     labels:
-    #       severity: warning
-    #     annotations:
-    #       summary: Too many connections (instance {{ "{{ $labels.instance }}" }})
-    #       description: |
-    #           RabbitMQ instance has too many connections (> 1000)
-    #           VALUE = {{ "{{ $value }}" }}\n  LABELS: {{ "{{ $labels }}" }}
     rules: []
 volumePermissions:
   enabled: false
