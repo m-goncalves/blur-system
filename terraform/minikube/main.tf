@@ -1,11 +1,18 @@
-provider "kubernetes" {
-  config_context_cluster      = "minikube"
+provider "aws" {
+    version                         = ">= 2.28.1"
+    region                          = var.region
+    secret_key                      = var.secret_key
+    access_key                      = var.access_key
 }
 
 provider "helm" {
   kubernetes {
     config_path               = "~/.kube/config-blur-cluster"
   }
+}
+
+provider "kubernetes" {
+  config_context_cluster      = "minikube"
 }
 
 module "release-prometheus-operator" {
@@ -40,3 +47,24 @@ resource "helm_release" "worker"{
   name                        = "worker"
   chart                       = "../../k8s/worker"
 }
+
+resource "aws_s3_bucket" "terraform_state_blur_bucket"{
+  bucket = "blur_unique_tf_state_bucket"
+  lifecycle {
+    prevent_destroy = true
+  }
+
+  versioning {
+    enabled = true
+  }
+
+  server_side_encryption {
+    rule {
+      apply_server_side_encryption_by_default {
+        sse_algorithm = "AES256"
+      }
+    }
+  }
+}
+
+resource "aws_dynamodb_table"
