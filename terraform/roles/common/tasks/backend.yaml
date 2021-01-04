@@ -1,0 +1,4 @@
+- name: Template backend
+  template:
+      dest: "{{ playbook_dir }}/minikube/backend.tf" 
+      src: templates/backend.j2
