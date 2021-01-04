@@ -1,6 +1,6 @@
 FROM python:3.8-alpine
 
-LABEL version="0.0.1"
+LABEL version="2.0" maintainer="tchelojg@gmail.com"
 
 RUN apk add --update-cache \
     build-base \
