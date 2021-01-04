@@ -1,2 +1,4 @@
 - name: configure tfvars
   import_tasks: tfvars.yaml
+- name: configure backend
+  import_tasks: backend.yaml
