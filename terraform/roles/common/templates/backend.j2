@@ -1,0 +1,9 @@
+terraform {
+  backend "s3" {
+    bucket                    = "{{ terraform[env].bucket }}"
+    key                       = "{{ terraform[env].bucket_key }}"
+    region                    = "{{ terraform[env].region }}"
+    dynamodb_table            = "{{ terraform[env].dynamodb_table }}"
+    encrypt                   = {{ terraform[env].encrypt }}
+  }
+}
