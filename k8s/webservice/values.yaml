@@ -1,5 +1,5 @@
 deployment:
-  image: marjugoncalves/blur-service:1.1
+  image: marjugoncalves/blur-service:2.0
   minReplicas: 1
   maxReplicas: 5
 name: webservice
