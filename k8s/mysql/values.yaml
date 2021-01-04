@@ -199,6 +199,6 @@ metrics:
     namespace: "default"
     interval: 30s
     honorLabels: false
-    release: "prometheus"
+    release: "prometheus-operator"
     additionalLabels:
-      release: "prometheus"
+      release: "prometheus-operator"
