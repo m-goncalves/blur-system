@@ -5,8 +5,8 @@ provider "aws" {
     access_key                 = var.access_key
 }
 
-resource "aws_s3_bucket" "terraform_state_blur_bucket"{
-  bucket                      = "blur-unique-tf-state-bucket"
+resource "aws_s3_bucket" "blur-tf-state-bucket"{
+  bucket                      = "blur-tf-state-bucket"
   lifecycle {
     prevent_destroy           = false
   }
@@ -30,15 +30,5 @@ resource "aws_dynamodb_table" "blur_locks" {
   attribute {
     name                      = "LockID"
     type                      = "S"
-  }
-}
-
-terraform {
-  backend "s3" {
-    bucket                    = "blur-unique-tf-state-bucket"
-    key                       = "blur/s3/terraform.tfstate"
-    region                    = "sa-east-1"
-    dynamodb_table            = "blur_locks"
-    encrypt                   = true
   }
 }
