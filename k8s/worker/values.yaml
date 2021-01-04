@@ -1,7 +1,7 @@
 deployment:
   minReplicas: 1
   maxReplicas: 3
-  image: marjugoncalves/blur-worker:1.8
+  image: marjugoncalves/blur-worker:2.0
 name: worker 
 labels: blur-worker
 initContainers:
