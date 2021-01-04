@@ -174,10 +174,6 @@ metrics:
       prometheus.io/port: "{{ .Values.metrics.service.port }}"
 ## Extra args must be placed here
 ## ref: https://github.com/prometheus/mysqld_exporter/
-  ## - --collect.auto_increment.columns
-  # extraArgs:
-  #   primary: []
-  #   secondary: []
 ## Mysqld Prometheus exporter liveness and readiness probes
   livenessProbe:
     enabled: true
