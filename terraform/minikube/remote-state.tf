@@ -6,7 +6,8 @@ provider "aws" {
 }
 
 resource "aws_s3_bucket" "blur-tf-state-bucket"{
-  bucket                      = "blur-tf-state-bucket"
+  bucket                      = var.bucket
+  acl                         = "private"
   lifecycle {
     prevent_destroy           = false
   }
