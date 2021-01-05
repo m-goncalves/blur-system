@@ -23,7 +23,7 @@ services:
                 condition: service_healthy
             mysql:
                 condition: service_healthy
-        image: marjugoncalves/blur-service:1.1
+        image: marjugoncalves/blur-service:2.0
         restart: always
         ports:
             - 8080:8080
@@ -45,7 +45,7 @@ services:
     worker:
         depends_on:
             - rabbitmq
-        image: marjugoncalves/blur-worker:1.1
+        image: marjugoncalves/blur-worker:2.0
         container_name: worker
         restart: always
         environment:
